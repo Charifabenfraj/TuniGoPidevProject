@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Taxi{% endblock %}
+
+{% block body %}
+    <h1>Taxi</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdTaxi</th>
+                <td>{{ taxi.idTaxi }}</td>
+            </tr>
+            <tr>
+                <th>NumeroTaxi</th>
+                <td>{{ taxi.numeroTaxi }}</td>
+            </tr>
+            <tr>
+                <th>NumeroChauffeur</th>
+                <td>{{ taxi.numeroChauffeur }}</td>
+            </tr>
+            <tr>
+                <th>PrenomChauffeur</th>
+                <td>{{ taxi.prenomChauffeur }}</td>
+            </tr>
+            <tr>
+                <th>NomChauffeur</th>
+                <td>{{ taxi.nomChauffeur }}</td>
+            </tr>
+            <tr>
+                <th>IdReservation</th>
+                <td>{{ taxi.idReservation }}</td>
+            </tr>
+            <tr>
+                <th>Isdisponible</th>
+                <td>{{ taxi.Isdisponible ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_taxi_index') }}">back to list</a>
+
+    <a href="{{ path('app_taxi_edit', {'idTaxi': taxi.idTaxi}) }}">edit</a>
+
+    {{ include('taxi/_delete_form.html.twig') }}
+{% endblock %}

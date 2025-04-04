@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Metro{% endblock %}
+
+{% block body %}
+    <h1>Create new Metro</h1>
+
+    {{ include('metro/_form.html.twig') }}
+
+    <a href="{{ path('app_metro_index') }}">back to list</a>
+{% endblock %}

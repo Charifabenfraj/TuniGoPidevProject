@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bus index{% endblock %}
+
+{% block body %}
+    <h1>Bus index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdBus</th>
+                <th>NumeroBus</th>
+                <th>IdTrajetBus</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for bu in buses %}
+            <tr>
+                <td>{{ bu.idBus }}</td>
+                <td>{{ bu.numeroBus }}</td>
+                <td>{{ bu.idTrajetBus }}</td>
+                <td>
+                    <a href="{{ path('app_bus_show', {'idBus': bu.idBus}) }}">show</a>
+                    <a href="{{ path('app_bus_edit', {'idBus': bu.idBus}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_bus_new') }}">Create new</a>
+{% endblock %}

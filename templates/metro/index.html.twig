@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Metro index{% endblock %}
+
+{% block body %}
+    <h1>Metro index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdMetro</th>
+                <th>NumeroMetro</th>
+                <th>IdTrajetMetro</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for metro in metros %}
+            <tr>
+                <td>{{ metro.idMetro }}</td>
+                <td>{{ metro.numeroMetro }}</td>
+                <td>{{ metro.idTrajetMetro }}</td>
+                <td>
+                    <a href="{{ path('app_metro_show', {'idMetro': metro.idMetro}) }}">show</a>
+                    <a href="{{ path('app_metro_edit', {'idMetro': metro.idMetro}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_metro_new') }}">Create new</a>
+{% endblock %}

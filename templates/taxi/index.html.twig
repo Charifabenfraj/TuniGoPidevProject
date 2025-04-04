@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Taxi index{% endblock %}
+
+{% block body %}
+    <h1>Taxi index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdTaxi</th>
+                <th>NumeroTaxi</th>
+                <th>NumeroChauffeur</th>
+                <th>PrenomChauffeur</th>
+                <th>NomChauffeur</th>
+                <th>IdReservation</th>
+                <th>Isdisponible</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for taxi in taxis %}
+            <tr>
+                <td>{{ taxi.idTaxi }}</td>
+                <td>{{ taxi.numeroTaxi }}</td>
+                <td>{{ taxi.numeroChauffeur }}</td>
+                <td>{{ taxi.prenomChauffeur }}</td>
+                <td>{{ taxi.nomChauffeur }}</td>
+                <td>{{ taxi.idReservation }}</td>
+                <td>{{ taxi.Isdisponible ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_taxi_show', {'idTaxi': taxi.idTaxi}) }}">show</a>
+                    <a href="{{ path('app_taxi_edit', {'idTaxi': taxi.idTaxi}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_taxi_new') }}">Create new</a>
+{% endblock %}
