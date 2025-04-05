@@ -2,18 +2,18 @@
 
 namespace App\Repository;
 
-use App\Entity\Bu;
+use App\Entity\Bus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Bu>
  */
-class BuRepository extends ServiceEntityRepository
+class BusRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Bu::class);
+        parent::__construct($registry, Bus::class);
     }
 
     //    /**

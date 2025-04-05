@@ -85,18 +85,18 @@ class Reclamation
         return $this;
     }
 
-    #[ORM\ManyToOne(targetEntity: Utilisateur1::class, inversedBy: 'reclamations')]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'reclamations')]
     #[ORM\JoinColumn(name: 'idUtilisateur', referencedColumnName: 'idUtilisateur')]
-    private ?Utilisateur1 $utilisateur1 = null;
+    private ?Utilisateur $utilisateur = null;
 
-    public function getUtilisateur1(): ?Utilisateur1
+    public function getUtilisateur(): ?Utilisateur
     {
-        return $this->utilisateur1;
+        return $this->utilisateur;
     }
 
-    public function setUtilisateur1(?Utilisateur1 $utilisateur1): self
+    public function setUtilisateur(?Utilisateur $utilisateur): self
     {
-        $this->utilisateur1 = $utilisateur1;
+        $this->utilisateur = $utilisateur;
         return $this;
     }
 

@@ -14,7 +14,7 @@ class Taxi
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',name: 'idTaxi')]
     private ?int $idTaxi = null;
 
     public function getIdTaxi(): ?int
@@ -28,7 +28,7 @@ class Taxi
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'numeroTaxi', nullable: false)]
     private ?string $numeroTaxi = null;
 
     public function getNumeroTaxi(): ?string
@@ -42,7 +42,7 @@ class Taxi
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'numeroChauffeur', nullable: false)]
     private ?string $numeroChauffeur = null;
 
     public function getNumeroChauffeur(): ?string
@@ -56,7 +56,7 @@ class Taxi
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'prenomChauffeur', nullable: false)]
     private ?string $prenomChauffeur = null;
 
     public function getPrenomChauffeur(): ?string
@@ -70,7 +70,7 @@ class Taxi
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'nomChauffeur', nullable: false)]
     private ?string $nomChauffeur = null;
 
     public function getNomChauffeur(): ?string
@@ -84,7 +84,7 @@ class Taxi
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'integer',name: 'idReservation', nullable: true)]
     private ?int $idReservation = null;
 
     public function getIdReservation(): ?int
@@ -98,7 +98,7 @@ class Taxi
         return $this;
     }
 
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: 'boolean',name: 'Isdisponible', nullable: false)]
     private ?bool $Isdisponible = null;
 
     public function isIsdisponible(): ?bool

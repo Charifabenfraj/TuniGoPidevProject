@@ -6,15 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-use App\Repository\BuRepository;
+use App\Repository\BusRepository;
 
-#[ORM\Entity(repositoryClass: BuRepository::class)]
+#[ORM\Entity(repositoryClass: BusRepository::class)]
 #[ORM\Table(name: 'bus')]
 class Bus
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer',name: 'id_Bus')]
+    #[ORM\Column(type: 'integer',name: 'idBus')]
     private ?int $idBus = null;
 
     public function getIdBus(): ?int
@@ -28,7 +28,7 @@ class Bus
         return $this;
     }
 
-    #[ORM\Column(type: 'string',name: 'numero_Bus', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'numeroBus', nullable: false)]
     private ?string $numeroBus = null;
 
     public function getNumeroBus(): ?string
@@ -42,7 +42,7 @@ class Bus
         return $this;
     }
 
-    #[ORM\Column(type: 'integer',name: 'id_Trajet_Bus', nullable: true)]
+    #[ORM\Column(type: 'integer',name: 'idTrajetBus', nullable: true)]
     private ?int $idTrajetBus = null;
 
     public function getIdTrajetBus(): ?int

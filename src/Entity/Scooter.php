@@ -15,7 +15,7 @@ class Scooter
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',name: 'idScooter')]
     private ?int $idScooter = null;
 
     public function getIdScooter(): ?int
@@ -29,7 +29,7 @@ class Scooter
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'numeroScooter', nullable: false)]
     private ?string $numeroScooter = null;
 
     public function getNumeroScooter(): ?string
@@ -43,7 +43,7 @@ class Scooter
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'localisationScooter', nullable: false)]
     private ?string $localisationScooter = null;
 
     public function getLocalisationScooter(): ?string
@@ -57,7 +57,7 @@ class Scooter
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'integer',name: 'idReservation', nullable: true)]
     private ?int $idReservation = null;
 
     public function getIdReservation(): ?int
@@ -71,7 +71,7 @@ class Scooter
         return $this;
     }
 
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: 'boolean',name: 'Isdisponible', nullable: false)]
     private ?bool $Isdisponible = null;
 
     public function isIsdisponible(): ?bool
@@ -85,7 +85,7 @@ class Scooter
         return $this;
     }
 
-    #[ORM\Column(type: 'datetime', nullable: false)]
+    #[ORM\Column(type: 'datetime',name: 'tempsReservation', nullable: false)]
     private ?\DateTimeInterface $tempsReservation = null;
 
     public function getTempsReservation(): ?\DateTimeInterface
@@ -99,7 +99,7 @@ class Scooter
         return $this;
     }
 
-    #[ORM\Column(type: 'datetime', nullable: false)]
+    #[ORM\Column(type: 'datetime',name: 'tempsArrivee', nullable: false)]
     private ?\DateTimeInterface $tempsArrivee = null;
 
     public function getTempsArrivee(): ?\DateTimeInterface

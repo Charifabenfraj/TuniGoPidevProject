@@ -14,7 +14,7 @@ class Metro
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',name: 'idMetro')]
     private ?int $idMetro = null;
 
     public function getIdMetro(): ?int
@@ -28,7 +28,7 @@ class Metro
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'numerometro', nullable: false)]
     private ?string $numeroMetro = null;
 
     public function getNumeroMetro(): ?string
@@ -42,7 +42,7 @@ class Metro
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'integer',name: 'idTrajetMetro', nullable: true)]
     private ?int $idTrajetMetro = null;
 
     public function getIdTrajetMetro(): ?int

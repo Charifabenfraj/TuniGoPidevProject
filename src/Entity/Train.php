@@ -14,7 +14,7 @@ class Train
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',name: 'idTrain')]
     private ?int $idTrain = null;
 
     public function getIdTrain(): ?int
@@ -28,7 +28,7 @@ class Train
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'numeroTrain', nullable: false)]
     private ?string $numeroTrain = null;
 
     public function getNumeroTrain(): ?string
@@ -42,7 +42,7 @@ class Train
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'integer',name: 'idTrajetTrain', nullable: true)]
     private ?int $idTrajetTrain = null;
 
     public function getIdTrajetTrain(): ?int
