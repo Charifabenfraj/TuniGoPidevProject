@@ -17,12 +17,12 @@ return [
         'entrypoint' => true,
     ],
     '@hotwired/stimulus' => [
-        'path' => './public/js/stimulus.min.js',
+        'url' => 'https://unpkg.com/@hotwired/stimulus@3.2.2/dist/stimulus.min.js',
     ],
     '@symfony/stimulus-bundle' => [
         'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
     ],
     '@hotwired/turbo' => [
-        'path' => './public/js/turbo.min.js',
+        'url' => 'https://unpkg.com/@hotwired/turbo@7.3.0/dist/turbo.min.js',
     ],
 ];
