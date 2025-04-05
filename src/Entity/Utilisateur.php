@@ -5,12 +5,15 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use App\Repository\UtilisateurRepository;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[ORM\Table(name: 'utilisateur')]
-class Utilisateur
+#[UniqueEntity(fields: ['emailUtilisateur'], message: 'Cet email est déjà utilisé par un autre compte.')]
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -56,7 +59,7 @@ class Utilisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string',name: 'emailUtilisateur', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'emailUtilisateur', nullable: false, unique: true)]
     private ?string $emailUtilisateur = null;
 
     public function getEmailUtilisateur(): ?string
@@ -140,4 +143,46 @@ class Utilisateur
         return $this;
     }
 
+    /**
+     * The public representation of the user (e.g. a username, an email address, etc.)
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->emailUtilisateur;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        // Guarantee every user at least has ROLE_USER
+        $roles = ['ROLE_USER'];
+        
+        // Map database role values to Symfony roles
+        if ($this->roleUtilisateur === 'admin') {
+            $roles[] = 'ROLE_ADMIN';
+        } else if ($this->roleUtilisateur === 'utilisateur') {
+            $roles[] = 'ROLE_UTILISATEUR';
+        }
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        // Just return the plain password
+        return $this->motDePasseUtilisateur;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // Nothing to erase since we're using plain text passwords
+    }
 }
