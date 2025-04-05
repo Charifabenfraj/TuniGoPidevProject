@@ -14,7 +14,7 @@ class Utilisateur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',name: 'idUtilisateur')]
     private ?int $idUtilisateur = null;
 
     public function getIdUtilisateur(): ?int
@@ -28,7 +28,7 @@ class Utilisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'nomUtilisateur', nullable: false)]
     private ?string $nomUtilisateur = null;
 
     public function getNomUtilisateur(): ?string
@@ -42,7 +42,7 @@ class Utilisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'prenomUtilisateur', nullable: false)]
     private ?string $prenomUtilisateur = null;
 
     public function getPrenomUtilisateur(): ?string
@@ -56,7 +56,7 @@ class Utilisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'emailUtilisateur', nullable: false)]
     private ?string $emailUtilisateur = null;
 
     public function getEmailUtilisateur(): ?string
@@ -70,7 +70,7 @@ class Utilisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'motDePasseUtilisateur', nullable: false)]
     private ?string $motDePasseUtilisateur = null;
 
     public function getMotDePasseUtilisateur(): ?string
@@ -84,7 +84,7 @@ class Utilisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'numeroTelephoneUtilisateur', nullable: false)]
     private ?string $numeroTelephoneUtilisateur = null;
 
     public function getNumeroTelephoneUtilisateur(): ?string
@@ -98,7 +98,7 @@ class Utilisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'roleUtilisateur', nullable: false)]
     private ?string $roleUtilisateur = null;
 
     public function getRoleUtilisateur(): ?string
@@ -112,7 +112,7 @@ class Utilisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'questionSecurite', nullable: false)]
     private ?string $questionSecurite = null;
 
     public function getQuestionSecurite(): ?string
@@ -126,7 +126,7 @@ class Utilisateur
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'reponseSecurite', nullable: false)]
     private ?string $reponseSecurite = null;
 
     public function getReponseSecurite(): ?string
