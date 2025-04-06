@@ -14,7 +14,7 @@ class Parking
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',name: 'idParking')]
     private ?int $idParking = null;
 
     public function getIdParking(): ?int
@@ -28,7 +28,7 @@ class Parking
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string',name: 'nomParking', nullable: true)]
     private ?string $nomParking = null;
 
     public function getNomParking(): ?string
@@ -42,7 +42,7 @@ class Parking
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string',name: 'localisationParking', nullable: true)]
     private ?string $localisationParking = null;
 
     public function getLocalisationParking(): ?string
@@ -56,7 +56,7 @@ class Parking
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'integer',name: 'place', nullable: true)]
     private ?int $place = null;
 
     public function getPlace(): ?int
