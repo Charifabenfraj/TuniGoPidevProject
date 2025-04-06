@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/taxi')]
@@ -50,22 +51,32 @@ final class TaxiController extends AbstractController
         ]);
     }
 
-    #[Route('/{idTaxi}/edit', name: 'app_taxi_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Taxi $taxi, EntityManagerInterface $entityManager): Response
+    #[Route('/{idTaxi}/edit', name: 'app_taxi_edit', methods: ['POST'])]
+    public function edit(Request $request, TaxiRepository $taxiRepository, EntityManagerInterface $entityManager, $idTaxi): JsonResponse
     {
-        $form = $this->createForm(TaxiType::class, $taxi);
-        $form->handleRequest($request);
+        $taxi = $taxiRepository->find($idTaxi);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_taxi_index', [], Response::HTTP_SEE_OTHER);
+        if (!$taxi) {
+            return new JsonResponse(['success' => false, 'message' => 'Taxi not found'], 404);
         }
 
-        return $this->render('taxi/edit.html.twig', [
-            'taxi' => $taxi,
-            'form' => $form,
-        ]);
+        $numeroTaxi = $request->get('numeroTaxi');
+        $numeroChauffeur = $request->get('numeroChauffeur');
+        $prenomChauffeur = $request->get('prenomChauffeur');
+        $nomChauffeur = $request->get('nomChauffeur');
+        $idReservation = $request->get('idReservation');
+        $Isdisponible = $request->get('Isdisponible');
+
+        $taxi->setNumeroTaxi($numeroTaxi);
+        $taxi->getNumeroChauffeur($numeroChauffeur);
+        $taxi->setPrenomChauffeur($prenomChauffeur);
+        $taxi->setNomChauffeur($nomChauffeur);
+        $taxi->setIdReservation($idReservation);
+        $taxi->setIsdisponible($Isdisponible);
+
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
     }
 
     #[Route('/{idTaxi}', name: 'app_taxi_delete', methods: ['POST'])]

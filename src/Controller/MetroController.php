@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/metro')]
@@ -51,21 +52,23 @@ final class MetroController extends AbstractController
     }
 
     #[Route('/{idMetro}/edit', name: 'app_metro_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Metro $metro, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, MetroRepository $metroRepository, EntityManagerInterface $entityManager, $idMetro): Response
     {
-        $form = $this->createForm(MetroType::class, $metro);
-        $form->handleRequest($request);
+        $metro = $metroRepository->find($idMetro);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_metro_index', [], Response::HTTP_SEE_OTHER);
+        if (!$metro) {
+            return new JsonResponse(['success' => false, 'message' => 'Metro not found'], 404);
         }
 
-        return $this->render('metro/edit.html.twig', [
-            'metro' => $metro,
-            'form' => $form,
-        ]);
+        $numeroMetro = $request->get('numeroMetro');
+        $idTrajetMetro = $request->get('idTrajetMetro');
+
+        $metro->setNumeroMetro($numeroMetro);
+        $metro->setIdTrajetMetro($idTrajetMetro);
+
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
     }
 
     #[Route('/{idMetro}', name: 'app_metro_delete', methods: ['POST'])]

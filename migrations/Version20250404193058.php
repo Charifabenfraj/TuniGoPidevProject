@@ -40,11 +40,11 @@ final class Version20250404193058 extends AbstractMigration
         $this->addSql('DROP INDEX `primary` ON reclamation');
         $this->addSql('ALTER TABLE reclamation DROP FOREIGN KEY reclamation_ibfk_1');
         $this->addSql('ALTER TABLE reclamation ADD type_reclamation VARCHAR(255) NOT NULL, ADD description_reclamation VARCHAR(255) NOT NULL, ADD statut_reclamation VARCHAR(255) NOT NULL, DROP typeReclamation, DROP descriptionReclamation, DROP statutReclamation, CHANGE idReclamation id_reclamation INT AUTO_INCREMENT NOT NULL, CHANGE dateReclamation date_reclamation DATE NOT NULL');
-        $this->addSql('ALTER TABLE reclamation ADD CONSTRAINT FK_CE6064045D419CCB FOREIGN KEY (idUtilisateur) REFERENCES utilisateur1 (idUtilisateur)');
+        $this->addSql('ALTER TABLE reclamation ADD CONSTRAINT FK_CE6064045D419CCB FOREIGN KEY (idUtilisateur) REFERENCES utilisateur (idUtilisateur)');
         $this->addSql('ALTER TABLE reclamation ADD PRIMARY KEY (id_reclamation)');
         $this->addSql('DROP INDEX reclamation_ibfk_1 ON reclamation');
         $this->addSql('CREATE INDEX IDX_CE6064045D419CCB ON reclamation (idUtilisateur)');
-        $this->addSql('ALTER TABLE reclamation ADD CONSTRAINT reclamation_ibfk_1 FOREIGN KEY (idUtilisateur) REFERENCES utilisateur1 (idUtilisateur) ON UPDATE CASCADE ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE reclamation ADD CONSTRAINT reclamation_ibfk_1 FOREIGN KEY (idUtilisateur) REFERENCES utilisateur (idUtilisateur) ON UPDATE CASCADE ON DELETE CASCADE');
         $this->addSql('ALTER TABLE reservation MODIFY idRes INT NOT NULL');
         $this->addSql('DROP INDEX `primary` ON reservation');
         $this->addSql('ALTER TABLE reservation ADD nom_user VARCHAR(255) NOT NULL, ADD moyen_paiement VARCHAR(255) NOT NULL, ADD confirmation_code VARCHAR(255) NOT NULL, DROP nomUser, DROP moyenPaiement, DROP confirmationCode, CHANGE moyen moyen VARCHAR(255) NOT NULL, CHANGE idRes id_res INT AUTO_INCREMENT NOT NULL, CHANGE dateRes date_res DATE NOT NULL');
@@ -88,10 +88,10 @@ final class Version20250404193058 extends AbstractMigration
         $this->addSql('DROP INDEX `primary` ON utilisateur');
         $this->addSql('ALTER TABLE utilisateur ADD nom_utilisateur VARCHAR(255) NOT NULL, ADD prenom_utilisateur VARCHAR(255) NOT NULL, ADD email_utilisateur VARCHAR(255) NOT NULL, ADD mot_de_passe_utilisateur VARCHAR(255) NOT NULL, ADD numero_telephone_utilisateur VARCHAR(255) NOT NULL, ADD role_utilisateur VARCHAR(255) NOT NULL, ADD question_securite VARCHAR(255) NOT NULL, ADD reponse_securite VARCHAR(255) NOT NULL, DROP nomUtilisateur, DROP prenomUtilisateur, DROP emailUtilisateur, DROP motDePasseUtilisateur, DROP numeroTelephoneUtilisateur, DROP roleUtilisateur, DROP questionSecurite, DROP reponseSecurite, CHANGE idUtilisateur id_utilisateur INT AUTO_INCREMENT NOT NULL');
         $this->addSql('ALTER TABLE utilisateur ADD PRIMARY KEY (id_utilisateur)');
-        $this->addSql('ALTER TABLE utilisateur1 MODIFY idUtilisateur INT NOT NULL');
-        $this->addSql('DROP INDEX `primary` ON utilisateur1');
-        $this->addSql('ALTER TABLE utilisateur1 ADD nom_utilisateur VARCHAR(255) NOT NULL, ADD prenom_utilisateur VARCHAR(255) NOT NULL, ADD email_utilisateur VARCHAR(255) NOT NULL, ADD mot_de_passe_utilisateur VARCHAR(255) NOT NULL, ADD numero_telephone_utilisateur VARCHAR(255) NOT NULL, ADD role_utilisateur VARCHAR(255) NOT NULL, DROP nomUtilisateur, DROP prenomUtilisateur, DROP emailUtilisateur, DROP motDePasseUtilisateur, DROP numeroTelephoneUtilisateur, DROP roleUtilisateur, CHANGE idUtilisateur id_utilisateur INT AUTO_INCREMENT NOT NULL');
-        $this->addSql('ALTER TABLE utilisateur1 ADD PRIMARY KEY (id_utilisateur)');
+        $this->addSql('ALTER TABLE utilisateur MODIFY idUtilisateur INT NOT NULL');
+        $this->addSql('DROP INDEX `primary` ON utilisateur');
+        $this->addSql('ALTER TABLE utilisateur ADD nom_utilisateur VARCHAR(255) NOT NULL, ADD prenom_utilisateur VARCHAR(255) NOT NULL, ADD email_utilisateur VARCHAR(255) NOT NULL, ADD mot_de_passe_utilisateur VARCHAR(255) NOT NULL, ADD numero_telephone_utilisateur VARCHAR(255) NOT NULL, ADD role_utilisateur VARCHAR(255) NOT NULL, DROP nomUtilisateur, DROP prenomUtilisateur, DROP emailUtilisateur, DROP motDePasseUtilisateur, DROP numeroTelephoneUtilisateur, DROP roleUtilisateur, CHANGE idUtilisateur id_utilisateur INT AUTO_INCREMENT NOT NULL');
+        $this->addSql('ALTER TABLE utilisateur ADD PRIMARY KEY (id_utilisateur)');
     }
 
     public function down(Schema $schema): void
@@ -117,11 +117,11 @@ final class Version20250404193058 extends AbstractMigration
         $this->addSql('DROP INDEX `PRIMARY` ON reclamation');
         $this->addSql('ALTER TABLE reclamation DROP FOREIGN KEY FK_CE6064045D419CCB');
         $this->addSql('ALTER TABLE reclamation ADD typeReclamation VARCHAR(50) NOT NULL, ADD descriptionReclamation VARCHAR(50) NOT NULL, ADD statutReclamation VARCHAR(50) NOT NULL, DROP type_reclamation, DROP description_reclamation, DROP statut_reclamation, CHANGE id_reclamation idReclamation INT AUTO_INCREMENT NOT NULL, CHANGE date_reclamation dateReclamation DATE NOT NULL');
-        $this->addSql('ALTER TABLE reclamation ADD CONSTRAINT reclamation_ibfk_1 FOREIGN KEY (idUtilisateur) REFERENCES utilisateur1 (idUtilisateur) ON UPDATE CASCADE ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE reclamation ADD CONSTRAINT reclamation_ibfk_1 FOREIGN KEY (idUtilisateur) REFERENCES utilisateur (idUtilisateur) ON UPDATE CASCADE ON DELETE CASCADE');
         $this->addSql('ALTER TABLE reclamation ADD PRIMARY KEY (idReclamation)');
         $this->addSql('DROP INDEX idx_ce6064045d419ccb ON reclamation');
         $this->addSql('CREATE INDEX reclamation_ibfk_1 ON reclamation (idUtilisateur)');
-        $this->addSql('ALTER TABLE reclamation ADD CONSTRAINT FK_CE6064045D419CCB FOREIGN KEY (idUtilisateur) REFERENCES utilisateur1 (idUtilisateur)');
+        $this->addSql('ALTER TABLE reclamation ADD CONSTRAINT FK_CE6064045D419CCB FOREIGN KEY (idUtilisateur) REFERENCES utilisateur (idUtilisateur)');
         $this->addSql('ALTER TABLE reservation MODIFY id_res INT NOT NULL');
         $this->addSql('DROP INDEX `PRIMARY` ON reservation');
         $this->addSql('ALTER TABLE reservation ADD nomUser VARCHAR(255) NOT NULL, ADD moyenPaiement VARCHAR(50) NOT NULL, ADD confirmationCode VARCHAR(255) NOT NULL, DROP nom_user, DROP moyen_paiement, DROP confirmation_code, CHANGE moyen moyen VARCHAR(50) NOT NULL, CHANGE id_res idRes INT AUTO_INCREMENT NOT NULL, CHANGE date_res dateRes DATE NOT NULL');
@@ -165,9 +165,9 @@ final class Version20250404193058 extends AbstractMigration
         $this->addSql('DROP INDEX `PRIMARY` ON utilisateur');
         $this->addSql('ALTER TABLE utilisateur ADD nomUtilisateur VARCHAR(50) NOT NULL, ADD prenomUtilisateur VARCHAR(50) NOT NULL, ADD emailUtilisateur VARCHAR(50) NOT NULL, ADD motDePasseUtilisateur VARCHAR(50) NOT NULL, ADD numeroTelephoneUtilisateur VARCHAR(20) NOT NULL, ADD roleUtilisateur VARCHAR(255) DEFAULT \'utilisateur\' NOT NULL, ADD questionSecurite VARCHAR(255) DEFAULT \'\' NOT NULL, ADD reponseSecurite VARCHAR(255) DEFAULT \'\' NOT NULL, DROP nom_utilisateur, DROP prenom_utilisateur, DROP email_utilisateur, DROP mot_de_passe_utilisateur, DROP numero_telephone_utilisateur, DROP role_utilisateur, DROP question_securite, DROP reponse_securite, CHANGE id_utilisateur idUtilisateur INT AUTO_INCREMENT NOT NULL');
         $this->addSql('ALTER TABLE utilisateur ADD PRIMARY KEY (idUtilisateur)');
-        $this->addSql('ALTER TABLE utilisateur1 MODIFY id_utilisateur INT NOT NULL');
-        $this->addSql('DROP INDEX `PRIMARY` ON utilisateur1');
-        $this->addSql('ALTER TABLE utilisateur1 ADD nomUtilisateur VARCHAR(50) NOT NULL, ADD prenomUtilisateur VARCHAR(50) NOT NULL, ADD emailUtilisateur VARCHAR(50) NOT NULL, ADD motDePasseUtilisateur VARCHAR(50) NOT NULL, ADD numeroTelephoneUtilisateur VARCHAR(20) NOT NULL, ADD roleUtilisateur VARCHAR(255) DEFAULT \'utilisateur\' NOT NULL, DROP nom_utilisateur, DROP prenom_utilisateur, DROP email_utilisateur, DROP mot_de_passe_utilisateur, DROP numero_telephone_utilisateur, DROP role_utilisateur, CHANGE id_utilisateur idUtilisateur INT AUTO_INCREMENT NOT NULL');
-        $this->addSql('ALTER TABLE utilisateur1 ADD PRIMARY KEY (idUtilisateur)');
+        $this->addSql('ALTER TABLE utilisateur MODIFY id_utilisateur INT NOT NULL');
+        $this->addSql('DROP INDEX `PRIMARY` ON utilisateur');
+        $this->addSql('ALTER TABLE utilisateur ADD nomUtilisateur VARCHAR(50) NOT NULL, ADD prenomUtilisateur VARCHAR(50) NOT NULL, ADD emailUtilisateur VARCHAR(50) NOT NULL, ADD motDePasseUtilisateur VARCHAR(50) NOT NULL, ADD numeroTelephoneUtilisateur VARCHAR(20) NOT NULL, ADD roleUtilisateur VARCHAR(255) DEFAULT \'utilisateur\' NOT NULL, DROP nom_utilisateur, DROP prenom_utilisateur, DROP email_utilisateur, DROP mot_de_passe_utilisateur, DROP numero_telephone_utilisateur, DROP role_utilisateur, CHANGE id_utilisateur idUtilisateur INT AUTO_INCREMENT NOT NULL');
+        $this->addSql('ALTER TABLE utilisateur ADD PRIMARY KEY (idUtilisateur)');
     }
 }

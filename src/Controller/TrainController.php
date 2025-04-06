@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/train')]
@@ -49,24 +50,28 @@ final class TrainController extends AbstractController
             'train' => $train,
         ]);
     }
+    
+#[Route('/{idTrain}/edit', name: 'app_train_edit', methods: ['POST'])]
 
-    #[Route('/{idTrain}/edit', name: 'app_train_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Train $train, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, TrainRepository $trainRepository, EntityManagerInterface $entityManager, $idTrain)
     {
-        $form = $this->createForm(TrainType::class, $train);
-        $form->handleRequest($request);
+        $train = $trainRepository->find($idTrain);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_train_index', [], Response::HTTP_SEE_OTHER);
+        if (!$train) {
+            return new JsonResponse(['success' => false, 'message' => 'Train not found'], 404);
         }
 
-        return $this->render('train/edit.html.twig', [
-            'train' => $train,
-            'form' => $form,
-        ]);
+        $numeroTrain = $request->get('numeroTrain');
+        $idTrajetTrain = $request->get('idTrajetTrain');
+
+        $train->setNumeroTrain($numeroTrain);
+        $train->setIdTrajetTrain($idTrajetTrain);
+
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
     }
+
 
     #[Route('/{idTrain}', name: 'app_train_delete', methods: ['POST'])]
     public function delete(Request $request, Train $train, EntityManagerInterface $entityManager): Response
