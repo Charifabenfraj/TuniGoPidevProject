@@ -6,7 +6,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
 use App\Repository\ScooterRepository;
 
 #[ORM\Entity(repositoryClass: ScooterRepository::class)]
@@ -30,9 +29,9 @@ class Scooter
     }
 
     #[ORM\Column(type: 'string',name: 'numeroScooter', nullable: false)]
-    private ?string $numeroScooter = null;
+    private string $numeroScooter;
 
-    public function getNumeroScooter(): ?string
+    public function getNumeroScooter(): string
     {
         return $this->numeroScooter;
     }
@@ -44,9 +43,9 @@ class Scooter
     }
 
     #[ORM\Column(type: 'string',name: 'localisationScooter', nullable: false)]
-    private ?string $localisationScooter = null;
+    private string $localisationScooter;
 
-    public function getLocalisationScooter(): ?string
+    public function getLocalisationScooter(): string
     {
         return $this->localisationScooter;
     }
@@ -71,24 +70,29 @@ class Scooter
         return $this;
     }
 
-    #[ORM\Column(type: 'boolean',name: 'Isdisponible', nullable: false)]
-    private ?bool $Isdisponible = null;
+  
 
-    public function isIsdisponible(): ?bool
-    {
-        return $this->Isdisponible;
-    }
+    // src/Entity/Scooter.php
 
-    public function setIsdisponible(bool $Isdisponible): self
-    {
-        $this->Isdisponible = $Isdisponible;
-        return $this;
-    }
+#[ORM\Column(type: 'boolean',name: 'isDisponible', nullable: false)]
+private bool $isDisponible;
+
+public function getIsDisponible(): bool
+{
+    return $this->isDisponible;
+}
+
+public function setIsDisponible(bool $isDisponible): self
+{
+    $this->isDisponible = $isDisponible;
+    return $this;
+}
+
 
     #[ORM\Column(type: 'datetime',name: 'tempsReservation', nullable: false)]
-    private ?\DateTimeInterface $tempsReservation = null;
+    private \DateTimeInterface $tempsReservation;
 
-    public function getTempsReservation(): ?\DateTimeInterface
+    public function getTempsReservation(): \DateTimeInterface
     {
         return $this->tempsReservation;
     }
@@ -100,9 +104,9 @@ class Scooter
     }
 
     #[ORM\Column(type: 'datetime',name: 'tempsArrivee', nullable: false)]
-    private ?\DateTimeInterface $tempsArrivee = null;
+    private \DateTimeInterface $tempsArrivee;
 
-    public function getTempsArrivee(): ?\DateTimeInterface
+    public function getTempsArrivee(): \DateTimeInterface
     {
         return $this->tempsArrivee;
     }
@@ -113,9 +117,13 @@ class Scooter
         return $this;
     }
 
-    public function isdisponible(): ?bool
+    // Constructeur pour initialiser les dates et autres propriétés
+    public function __construct()
     {
-        return $this->Isdisponible;
+        $this->tempsReservation = new \DateTime(); // Date actuelle
+        $this->tempsArrivee = new \DateTime(); // Date actuelle par défaut
+        $this->isDisponible = true; // Valeur par défaut (disponible)
+        $this->numeroScooter = ''; // Valeur par défaut pour numéroScooter (chaine vide)
+        $this->localisationScooter = ''; // Valeur par défaut pour localisationScooter
     }
-
 }
