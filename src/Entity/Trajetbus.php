@@ -7,15 +7,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-use App\Repository\TrajetbuRepository;
+use App\Repository\TrajetbusRepository;
 
-#[ORM\Entity(repositoryClass: TrajetbuRepository::class)]
+#[ORM\Entity(repositoryClass: TrajetbusRepository::class)]
 #[ORM\Table(name: 'trajetbus')]
 class Trajetbus
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',name: 'idTrajetBus')]
     private ?int $idTrajetBus = null;
 
     public function getIdTrajetBus(): ?int
@@ -29,7 +29,7 @@ class Trajetbus
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'departTrajetbus', nullable: false)]
     private ?string $departTrajetbus = null;
 
     public function getDepartTrajetbus(): ?string
@@ -43,7 +43,7 @@ class Trajetbus
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'arriveTrajetBus', nullable: false)]
     private ?string $arriveTrajetBus = null;
 
     public function getArriveTrajetBus(): ?string
@@ -57,7 +57,7 @@ class Trajetbus
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'heurDepartBus', nullable: false)]
     private ?string $heurDepartBus = null;
 
     public function getHeurDepartBus(): ?string
@@ -71,7 +71,7 @@ class Trajetbus
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'heurArriveBus', nullable: false)]
     private ?string $heurArriveBus = null;
 
     public function getHeurArriveBus(): ?string
@@ -85,7 +85,7 @@ class Trajetbus
         return $this;
     }
 
-    #[ORM\Column(type: 'decimal', nullable: false)]
+    #[ORM\Column(type: 'decimal',name: 'prixTicketBus', nullable: false)]
     private ?float $prixTicketBus = null;
 
     public function getPrixTicketBus(): ?float
@@ -99,7 +99,7 @@ class Trajetbus
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
+    #[ORM\Column(type: 'integer',name: 'idBus', nullable: false)]
     private ?int $idBus = null;
 
     public function getIdBus(): ?int
@@ -113,7 +113,7 @@ class Trajetbus
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
+    #[ORM\Column(type: 'integer',name: 'idReservation', nullable: false)]
     private ?int $idReservation = null;
 
     public function getIdReservation(): ?int
