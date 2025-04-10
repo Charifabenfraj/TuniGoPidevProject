@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New ReservationParking{% endblock %}
+
+{% block body %}
+    <h1>Create new ReservationParking</h1>
+
+    {{ include('reservation_parking/_form.html.twig') }}
+
+    <a href="{{ path('app_reservation_parking_index') }}">back to list</a>
+{% endblock %}

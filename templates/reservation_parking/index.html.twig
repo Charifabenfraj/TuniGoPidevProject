@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ReservationParking index{% endblock %}
+
+{% block body %}
+    <h1>ReservationParking index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdReservation</th>
+                <th>DateReservation</th>
+                <th>IdUtilisateur</th>
+                <th>IdTrajetTrain</th>
+                <th>IdTrajetMetro</th>
+                <th>IdTrajetBus</th>
+                <th>IdScooter</th>
+                <th>IdTaxi</th>
+                <th>IdParking</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reservation_parking in reservation_parkings %}
+            <tr>
+                <td>{{ reservation_parking.idReservation }}</td>
+                <td>{{ reservation_parking.dateReservation ? reservation_parking.dateReservation|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ reservation_parking.idUtilisateur }}</td>
+                <td>{{ reservation_parking.idTrajetTrain }}</td>
+                <td>{{ reservation_parking.idTrajetMetro }}</td>
+                <td>{{ reservation_parking.idTrajetBus }}</td>
+                <td>{{ reservation_parking.idScooter }}</td>
+                <td>{{ reservation_parking.idTaxi }}</td>
+                <td>{{ reservation_parking.idParking }}</td>
+                <td>
+                    <a href="{{ path('app_reservation_parking_show', {'idReservation': reservation_parking.idReservation}) }}">show</a>
+                    <a href="{{ path('app_reservation_parking_edit', {'idReservation': reservation_parking.idReservation}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_reservation_parking_new') }}">Create new</a>
+{% endblock %}

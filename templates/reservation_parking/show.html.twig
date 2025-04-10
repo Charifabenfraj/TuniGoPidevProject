@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ReservationParking{% endblock %}
+
+{% block body %}
+    <h1>ReservationParking</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdReservation</th>
+                <td>{{ reservation_parking.idReservation }}</td>
+            </tr>
+            <tr>
+                <th>DateReservation</th>
+                <td>{{ reservation_parking.dateReservation ? reservation_parking.dateReservation|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>IdUtilisateur</th>
+                <td>{{ reservation_parking.idUtilisateur }}</td>
+            </tr>
+            <tr>
+                <th>IdTrajetTrain</th>
+                <td>{{ reservation_parking.idTrajetTrain }}</td>
+            </tr>
+            <tr>
+                <th>IdTrajetMetro</th>
+                <td>{{ reservation_parking.idTrajetMetro }}</td>
+            </tr>
+            <tr>
+                <th>IdTrajetBus</th>
+                <td>{{ reservation_parking.idTrajetBus }}</td>
+            </tr>
+            <tr>
+                <th>IdScooter</th>
+                <td>{{ reservation_parking.idScooter }}</td>
+            </tr>
+            <tr>
+                <th>IdTaxi</th>
+                <td>{{ reservation_parking.idTaxi }}</td>
+            </tr>
+            <tr>
+                <th>IdParking</th>
+                <td>{{ reservation_parking.idParking }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_reservation_parking_index') }}">back to list</a>
+
+    <a href="{{ path('app_reservation_parking_edit', {'idReservation': reservation_parking.idReservation}) }}">edit</a>
+
+    {{ include('reservation_parking/_delete_form.html.twig') }}
+{% endblock %}

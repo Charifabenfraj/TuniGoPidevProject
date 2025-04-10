@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservation {% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ asset('styles/admin.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="admin-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <i class="fas fa-bus"></i>
+                <span>TuniGo Admin</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="{{ path('app_admin_dashboard') }}" class="sidebar-link {% if app.request.get('_route') == 'app_admin_dashboard' %}active{% endif %}">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Tableau de bord</span>
+                </a>
+            </li>
+            
+            <div class="sidebar-divider"></div>
+            
+            <li class="sidebar-item">
+                <a href="{{ path('app_utilisateur_index') }}" class="sidebar-link {% if app.request.get('_route') starts with 'app_utilisateur_' %}active{% endif %}">
+                    <i class="fas fa-users"></i>
+                    <span>Gestion Utilisateurs</span>
+                </a>
+            </li>
+            
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-subway"></i>
+                    <span>Gestion Transport</span>
+                </a>
+            </li>
+            
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-route"></i>
+                    <span>Gestion Trajets</span>
+                </a>
+            </li>
+            
+            <li class="sidebar-item">
+                <a href="{{ path('app_reservation_index') }}" class="sidebar-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Gestion Réservations</span>
+                </a>
+            </li>
+            
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Gestion Réclamations</span>
+                </a>
+            </li>
+            
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-parking"></i>
+                    <span>Gestion Parking</span>
+                </a>
+            </li>
+            
+            <div class="sidebar-divider"></div>
+            
+            <li class="sidebar-item">
+                <a href="{{ path('app_logout') }}" class="sidebar-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Se déconnecter</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Gestion des Utilisateurs</h1>
+            <div class="page-actions">
+                <a href="{{ path('app_utilisateur_new') }}" class="btn-admin btn-primary-admin">
+                    <i class="fas fa-plus"></i> Ajouter un utilisateur
+                </a>
+            </div>
+        </div>
+    <h1>Reservation index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdRes</th>
+                <th>NomUser</th>
+                <th>Moyen</th>
+                <th>DateRes</th>
+                <th>MoyenPaiement</th>
+                <th>ConfirmationCode</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.idRes }}</td>
+                <td>{{ reservation.nomUser }}</td>
+                <td>{{ reservation.moyen }}</td>
+                <td>{{ reservation.dateRes ? reservation.dateRes|date('Y-m-d') : '' }}</td>
+                <td>{{ reservation.moyenPaiement }}</td>
+                <td>{{ reservation.confirmationCode }}</td>
+                <td>
+                    <a href="{{ path('app_reservation_show', {'idRes': reservation.idRes}) }}">show</a>
+                    <a href="{{ path('app_reservation_edit', {'idRes': reservation.idRes}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_reservation_new') }}">Create new</a>
+{% endblock %}

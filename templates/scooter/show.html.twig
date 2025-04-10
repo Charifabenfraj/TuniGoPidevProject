@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Scooter{% endblock %}
+
+{% block body %}
+    <h1>Scooter</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdScooter</th>
+                <td>{{ scooter.idScooter }}</td>
+            </tr>
+            <tr>
+                <th>NumeroScooter</th>
+                <td>{{ scooter.numeroScooter }}</td>
+            </tr>
+            <tr>
+                <th>LocalisationScooter</th>
+                <td>{{ scooter.localisationScooter }}</td>
+            </tr>
+            <tr>
+                <th>IdReservation</th>
+                <td>{{ scooter.idReservation }}</td>
+            </tr>
+            <tr>
+                <th>Isdisponible</th>
+                <td>{{ scooter.Isdisponible ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>TempsReservation</th>
+                <td>{{ scooter.tempsReservation ? scooter.tempsReservation|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>TempsArrivee</th>
+                <td>{{ scooter.tempsArrivee ? scooter.tempsArrivee|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_scooter_index') }}">back to list</a>
+
+    <a href="{{ path('app_scooter_edit', {'idScooter': scooter.idScooter}) }}">edit</a>
+
+    {{ include('scooter/_delete_form.html.twig') }}
+{% endblock %}
