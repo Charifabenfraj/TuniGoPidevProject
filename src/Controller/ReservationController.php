@@ -14,6 +14,15 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/reservation')]
 final class ReservationController extends AbstractController
 {
+<<<<<<< HEAD
+    #[Route('/reservation', name: 'app_reservation_index')]
+    public function index(ReservationRepository $reservationRepository): Response
+{
+    return $this->render('reservation/index.html.twig', [
+        'reservations' => $reservationRepository->findAll(),
+    ]);
+}
+=======
     #[Route(name: 'app_reservation_index', methods: ['GET'])]
     public function index(ReservationRepository $reservationRepository): Response
     {
@@ -21,6 +30,7 @@ final class ReservationController extends AbstractController
             'reservations' => $reservationRepository->findAll(),
         ]);
     }
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

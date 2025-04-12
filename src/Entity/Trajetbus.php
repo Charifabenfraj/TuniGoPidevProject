@@ -7,15 +7,25 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
+<<<<<<< HEAD
+use App\Repository\TrajetbuRepository;
+
+#[ORM\Entity(repositoryClass: TrajetbuRepository::class)]
+=======
 use App\Repository\TrajetbusRepository;
 
 #[ORM\Entity(repositoryClass: TrajetbusRepository::class)]
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
 #[ORM\Table(name: 'trajetbus')]
 class Trajetbus
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+<<<<<<< HEAD
+    #[ORM\Column(type: 'integer')]
+=======
     #[ORM\Column(type: 'integer',name: 'idTrajetBus')]
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
     private ?int $idTrajetBus = null;
 
     public function getIdTrajetBus(): ?int
@@ -29,7 +39,11 @@ class Trajetbus
         return $this;
     }
 
+<<<<<<< HEAD
+    #[ORM\Column(type: 'string', nullable: false)]
+=======
     #[ORM\Column(type: 'string',name: 'departTrajetbus', nullable: false)]
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
     private ?string $departTrajetbus = null;
 
     public function getDepartTrajetbus(): ?string
@@ -43,7 +57,11 @@ class Trajetbus
         return $this;
     }
 
+<<<<<<< HEAD
+    #[ORM\Column(type: 'string', nullable: false)]
+=======
     #[ORM\Column(type: 'string',name: 'arriveTrajetBus', nullable: false)]
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
     private ?string $arriveTrajetBus = null;
 
     public function getArriveTrajetBus(): ?string
@@ -57,7 +75,11 @@ class Trajetbus
         return $this;
     }
 
+<<<<<<< HEAD
+    #[ORM\Column(type: 'string', nullable: false)]
+=======
     #[ORM\Column(type: 'string',name: 'heurDepartBus', nullable: false)]
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
     private ?string $heurDepartBus = null;
 
     public function getHeurDepartBus(): ?string
@@ -71,7 +93,11 @@ class Trajetbus
         return $this;
     }
 
+<<<<<<< HEAD
+    #[ORM\Column(type: 'string', nullable: false)]
+=======
     #[ORM\Column(type: 'string',name: 'heurArriveBus', nullable: false)]
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
     private ?string $heurArriveBus = null;
 
     public function getHeurArriveBus(): ?string
@@ -85,7 +111,11 @@ class Trajetbus
         return $this;
     }
 
+<<<<<<< HEAD
+    #[ORM\Column(type: 'decimal', nullable: false)]
+=======
     #[ORM\Column(type: 'decimal',name: 'prixTicketBus', nullable: false)]
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
     private ?float $prixTicketBus = null;
 
     public function getPrixTicketBus(): ?float
@@ -99,7 +129,11 @@ class Trajetbus
         return $this;
     }
 
+<<<<<<< HEAD
+    #[ORM\Column(type: 'integer', nullable: false)]
+=======
     #[ORM\Column(type: 'integer',name: 'idBus', nullable: false)]
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
     private ?int $idBus = null;
 
     public function getIdBus(): ?int
@@ -113,7 +147,11 @@ class Trajetbus
         return $this;
     }
 
+<<<<<<< HEAD
+    #[ORM\Column(type: 'integer', nullable: false)]
+=======
     #[ORM\Column(type: 'integer',name: 'idReservation', nullable: false)]
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
     private ?int $idReservation = null;
 
     public function getIdReservation(): ?int

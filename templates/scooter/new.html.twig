@@ -2,6 +2,14 @@
 
 {% block title %}New Scooter{% endblock %}
 
+<<<<<<< HEAD
+{% block body %}
+    <h1>Create new Scooter</h1>
+
+    {{ include('scooter/_form.html.twig') }}
+
+    <a href="{{ path('app_scooter_index') }}">back to list</a>
+=======
 {% block stylesheets %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -93,4 +101,5 @@
 
 {% block javascripts %}
     {{ parent() }}
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
 {% endblock %}

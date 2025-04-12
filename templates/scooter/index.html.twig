@@ -1,5 +1,49 @@
 {% extends 'base.html.twig' %}
 
+<<<<<<< HEAD
+{% block title %}Scooter index{% endblock %}
+
+{% block body %}
+    <h1>Scooter index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdScooter</th>
+                <th>NumeroScooter</th>
+                <th>LocalisationScooter</th>
+                <th>IdReservation</th>
+                <th>Isdisponible</th>
+                <th>TempsReservation</th>
+                <th>TempsArrivee</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for scooter in scooters %}
+            <tr>
+                <td>{{ scooter.idScooter }}</td>
+                <td>{{ scooter.numeroScooter }}</td>
+                <td>{{ scooter.localisationScooter }}</td>
+                <td>{{ scooter.idReservation }}</td>
+                <td>{{ scooter.Isdisponible ? 'Yes' : 'No' }}</td>
+                <td>{{ scooter.tempsReservation ? scooter.tempsReservation|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ scooter.tempsArrivee ? scooter.tempsArrivee|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_scooter_show', {'idScooter': scooter.idScooter}) }}">show</a>
+                    <a href="{{ path('app_scooter_edit', {'idScooter': scooter.idScooter}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_scooter_new') }}">Create new</a>
+=======
 {% block title %}Gestion des Scooters - TuniGo{% endblock %}
 
 {% block stylesheets %}
@@ -184,4 +228,5 @@
             });
         });
     </script>
+>>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
 {% endblock %}
