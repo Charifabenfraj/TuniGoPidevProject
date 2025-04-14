@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\TraitementReclamation;
 
 use App\Repository\ReclamationRepository;
 
@@ -15,7 +16,7 @@ class Reclamation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',name: 'idReclamation')]
     private ?int $idReclamation = null;
 
     public function getIdReclamation(): ?int
@@ -29,7 +30,7 @@ class Reclamation
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'typeReclamation', nullable: false)]
     private ?string $typeReclamation = null;
 
     public function getTypeReclamation(): ?string
@@ -43,7 +44,7 @@ class Reclamation
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string',name: 'descriptionReclamation', nullable: false)]
     private ?string $descriptionReclamation = null;
 
     public function getDescriptionReclamation(): ?string
@@ -57,21 +58,42 @@ class Reclamation
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false,name: 'statutReclamation')]
     private ?string $statutReclamation = null;
 
     public function getStatutReclamation(): ?string
     {
+        
         return $this->statutReclamation;
     }
 
-    public function setStatutReclamation(string $statutReclamation): self
+    public function setStatutReclamation(?string $statutReclamation): self
     {
+        // On assigne la valeur du statut directement, en fonction du champ envoyé
         $this->statutReclamation = $statutReclamation;
+    
         return $this;
     }
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+    
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+    
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
+    
+   /**
+     * @ORM\Column(type="datetime")
+     */
+    #[ORM\Column(type: 'datetime', name: 'dateReclamation', nullable: false)]
 
-    #[ORM\Column(type: 'date', nullable: false)]
     private ?\DateTimeInterface $dateReclamation = null;
 
     public function getDateReclamation(): ?\DateTimeInterface
@@ -100,56 +122,72 @@ class Reclamation
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+
+
+    #[ORM\Column(type: 'string',name: 'nom_utilisateur', nullable: false)]
     private ?string $nom_utilisateur = null;
-
-    public function getNom_utilisateur(): ?string
-    {
-        return $this->nom_utilisateur;
-    }
-
-    public function setNom_utilisateur(string $nom_utilisateur): self
-    {
-        $this->nom_utilisateur = $nom_utilisateur;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $prenom_utilisateur = null;
-
-    public function getPrenom_utilisateur(): ?string
-    {
-        return $this->prenom_utilisateur;
-    }
-
-    public function setPrenom_utilisateur(string $prenom_utilisateur): self
-    {
-        $this->prenom_utilisateur = $prenom_utilisateur;
-        return $this;
-    }
-
     public function getNomUtilisateur(): ?string
     {
         return $this->nom_utilisateur;
     }
-
-    public function setNomUtilisateur(string $nom_utilisateur): static
+    
+    public function setNomUtilisateur(string $nom_utilisateur): self
     {
         $this->nom_utilisateur = $nom_utilisateur;
-
         return $this;
     }
+    
 
+    #[ORM\Column(type: 'string',name: 'prenom_utilisateur', nullable: false)]
+    private ?string $prenom_utilisateur = null;
+    
     public function getPrenomUtilisateur(): ?string
     {
         return $this->prenom_utilisateur;
     }
-
-    public function setPrenomUtilisateur(string $prenom_utilisateur): static
+    
+    public function setPrenomUtilisateur(string $prenom_utilisateur): self
     {
         $this->prenom_utilisateur = $prenom_utilisateur;
-
         return $this;
     }
+    
+
+    #[ORM\OneToMany(mappedBy: 'reclamation', targetEntity: TraitementReclamation::class, cascade: ['persist', 'remove'])]
+    private Collection $traitements;
+    
+    public function __construct()
+    {
+        $this->traitements = new ArrayCollection();
+    }
+    
+    public function getTraitements(): Collection
+    {
+        return $this->traitements;
+    }
+    
+    public function addTraitement(TraitementReclamation $traitement): self
+    {
+        if (!$this->traitements->contains($traitement)) {
+            $this->traitements[] = $traitement;
+            $traitement->setReclamation($this);
+        }
+    
+        return $this;
+    }
+    
+    public function removeTraitement(TraitementReclamation $traitement): self
+    {
+        if ($this->traitements->removeElement($traitement)) {
+            // set the owning side to null (unless already changed)
+            if ($traitement->getReclamation() === $this) {
+                $traitement->setReclamation(null);
+            }
+        }
+    
+        return $this;
+    }
+    
 
 }
+
