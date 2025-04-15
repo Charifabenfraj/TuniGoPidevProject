@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TraitementReclamationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TraitementReclamationRepository::class)]
 class TraitementReclamation
@@ -14,12 +15,16 @@ class TraitementReclamation
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: "Le statut de traitement est obligatoire")]
     private ?string $statut_traitement = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Assert\NotBlank(message: "La date de traitement est obligatoire")]
     private ?\DateTimeInterface $date_traitement = null;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: "La description du traitement est obligatoire")]
+
     private ?string $traitement_description = null;
 
     #[ORM\ManyToOne(targetEntity: Reclamation::class)]

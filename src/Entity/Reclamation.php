@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\TraitementReclamation;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\ReclamationRepository;
 
@@ -31,6 +32,11 @@ class Reclamation
     }
 
     #[ORM\Column(type: 'string',name: 'typeReclamation', nullable: false)]
+    #[Assert\NotBlank(message: "Le type de réclamation est obligatoire")]
+    #[Assert\Choice(
+        choices: ['Service', 'Disponibilité', 'Paiement'],
+        message: "Le type doit être 'Service', 'Disponibilité' ou 'Paiement'"
+    )]
     private ?string $typeReclamation = null;
 
     public function getTypeReclamation(): ?string
@@ -45,6 +51,13 @@ class Reclamation
     }
 
     #[ORM\Column(type: 'string',name: 'descriptionReclamation', nullable: false)]
+    #[Assert\NotBlank(message: "La description est obligatoire")]
+    #[Assert\Length(
+        min: 10,
+        max: 100,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères",
+        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $descriptionReclamation = null;
 
     public function getDescriptionReclamation(): ?string
@@ -59,6 +72,10 @@ class Reclamation
     }
 
     #[ORM\Column(type: 'string', nullable: false,name: 'statutReclamation')]
+    #[Assert\Choice(
+        choices: ['En Attente', 'Résolue'],
+        message: "Le statut Reclamation doit être  'En Attente' ou 'Résolue'"
+    )]
     private ?string $statutReclamation = null;
 
     public function getStatutReclamation(): ?string
@@ -125,6 +142,11 @@ class Reclamation
 
 
     #[ORM\Column(type: 'string',name: 'nom_utilisateur', nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ\s\-]+$/",
+        message: "Le nom d'utilisateur ne doit contenir que des lettres"
+    )]
     private ?string $nom_utilisateur = null;
     public function getNomUtilisateur(): ?string
     {
@@ -139,6 +161,11 @@ class Reclamation
     
 
     #[ORM\Column(type: 'string',name: 'prenom_utilisateur', nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ\s\-]+$/",
+        message: "Le prénom d'utilisateur ne doit contenir que des lettres"
+    )]
     private ?string $prenom_utilisateur = null;
     
     public function getPrenomUtilisateur(): ?string

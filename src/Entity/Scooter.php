@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\ScooterRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ScooterRepository::class)]
 #[ORM\Table(name: 'scooter')]
@@ -29,6 +30,17 @@ class Scooter
     }
 
     #[ORM\Column(type: 'string',name: 'numeroScooter', nullable: false)]
+    #[Assert\NotBlank(message: "Le numéro de Scooter est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^SC[0-9]+$/",
+        message: "Le numéro de Scooter doit commencer par 'SC' suivi de chiffres"
+    )]
+    #[Assert\Length(
+        min: 4,
+        max: 10,
+        minMessage: "Le numéro de Scooter doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le numéro de Scooter ne peut pas dépasser {{ limit }} caractères"
+    )]
     private string $numeroScooter;
 
     public function getNumeroScooter(): string
@@ -43,6 +55,17 @@ class Scooter
     }
 
     #[ORM\Column(type: 'string',name: 'localisationScooter', nullable: false)]
+    #[Assert\NotBlank(message: "La localisation est obligatoire")]
+    #[Assert\Length(
+        min: 4,
+        max: 20,
+        minMessage: "Le numéro doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le numéro ne peut pas dépasser {{ limit }} caractères"
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ\s\-]+$/",
+        message: "La localisation ne doit contenir que des lettres"
+    )]
     private string $localisationScooter;
 
     public function getLocalisationScooter(): string
@@ -57,6 +80,7 @@ class Scooter
     }
 
     #[ORM\Column(type: 'integer',name: 'idReservation', nullable: true)]
+
     private ?int $idReservation = null;
 
     public function getIdReservation(): ?int
@@ -75,6 +99,10 @@ class Scooter
     // src/Entity/Scooter.php
 
 #[ORM\Column(type: 'boolean',name: 'isDisponible', nullable: false)]
+#[Assert\Type(
+    type: 'bool',
+    message: "La disponibilité doit être true (1) ou false (0)"
+)]
 private bool $isDisponible;
 
 public function getIsDisponible(): bool

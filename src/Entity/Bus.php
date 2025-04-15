@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\BusRepository;
 
@@ -29,6 +30,17 @@ class Bus
     }
 
     #[ORM\Column(type: 'string',name: 'numeroBus', nullable: false)]
+    #[Assert\NotBlank(message: "Le numéro de bus est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^B-[0-9]+$/",
+        message: "Le numéro de bus doit commencer par 'B-' suivi de chiffres"
+    )]
+    #[Assert\Length(
+        min: 4,
+        max: 10,
+        minMessage: "Le numéro de bus doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le numéro de bus ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $numeroBus = null;
 
     public function getNumeroBus(): ?string
