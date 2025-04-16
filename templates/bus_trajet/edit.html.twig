@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le trajet de bus • TuniGo{% endblock %}
+
+{% block body %}
+<div class="admin-container d-flex">
+    {% include 'admin/sidebar.html.twig' %}
+
+    <div class="main-content flex-grow-1 p-4 bg-light">
+        <!-- En-tête -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="h3 mb-0 text-primary font-weight-bold">
+                    <i class="fas fa-edit fa-sm mr-3"></i>Modification du trajet
+                </h1>
+                <p class="text-muted mt-2">ID : {{ bus_trajet.id }}</p>
+            </div>
+            <div class="btn-group">
+                <a href="{{ path('app_bus_trajet_show', {'id': bus_trajet.id}) }}" 
+                   class="btn btn-primary btn-lg rounded-pill shadow-sm px-4">
+                    <i class="fas fa-eye mr-3"></i>Voir détails
+                </a>
+                <a href="{{ path('app_bus_trajet_index') }}" 
+                   class="btn btn-outline-secondary btn-lg rounded-pill shadow-sm ml-3 px-4">
+                    <i class="fas fa-arrow-left mr-3"></i>Retour
+                </a>
+            </div>
+        </div>
+
+        <!-- Formulaire -->
+        <div class="card border-0 shadow-lg rounded-xl overflow-hidden">
+            <div class="card-header bg-gradient-primary text-blue py-4">
+                <h5 class="mb-0 pl-3">
+                    <i class="fas fa-pen-alt mr-3"></i>Formulaire de modification
+                </h5>
+            </div>
+            
+            <div class="card-body p-5">
+                {{ form_start(form) }}
+                
+                    <!-- Stations -->
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group input-group-lg">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-light pr-4 border-right-0">
+                                            <i class="fas fa-map-marker-alt text-primary fa-lg ml-2"></i>
+                                        </span>
+                                    </div>
+                                    {{ form_widget(form.stationDepart, {
+                                        'attr': {
+                                            'class': 'form-control form-control-lg pl-3',
+                                            'placeholder': 'Station de départ...'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group input-group-lg">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-light pr-4 border-right-0">
+                                            <i class="fas fa-map-marker-alt text-danger fa-lg ml-2"></i>
+                                        </span>
+                                    </div>
+                                    {{ form_widget(form.stationArrivee, {
+                                        'attr': {
+                                            'class': 'form-control form-control-lg pl-3',
+                                            'placeholder': 'Station d\'arrivée...'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Horaires -->
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group input-group-lg">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-light pr-4 border-right-0">
+                                            <i class="fas fa-clock text-success fa-lg ml-2"></i>
+                                        </span>
+                                    </div>
+                                    {{ form_widget(form.heureDepart, {
+                                        'attr': {
+                                            'class': 'form-control form-control-lg pl-3 timepicker'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group input-group-lg">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-light pr-4 border-right-0">
+                                            <i class="fas fa-clock text-danger fa-lg ml-2"></i>
+                                        </span>
+                                    </div>
+                                    {{ form_widget(form.heureArrivee, {
+                                        'attr': {
+                                            'class': 'form-control form-control-lg pl-3 timepicker'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Numéro de bus -->
+                    <div class="form-group mb-5">
+                        <div class="input-group input-group-lg">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-light pr-4 border-right-0">
+                                    <i class="fas fa-bus text-warning fa-lg ml-2"></i>
+                                </span>
+                            </div>
+                            {{ form_widget(form.numeroBus, {
+                                'attr': {
+                                    'class': 'form-control form-control-lg pl-3',
+                                    'placeholder': 'Numéro du bus...'
+                                }
+                            }) }}
+                        </div>
+                    </div>
+
+                    <!-- Bouton de soumission -->
+                    <div class="text-right mt-5">
+                        <button type="submit" class="btn btn-success btn-lg rounded-pill px-5 py-3 shadow">
+                            <i class="fas fa-save mr-3"></i>Enregistrer les modifications
+                        </button>
+                    </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

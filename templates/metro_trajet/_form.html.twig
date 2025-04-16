@@ -1,0 +1,53 @@
+<div class="card-admin">
+    <div class="card-admin-body">
+        {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_label(form.gareDepart) }}
+                {{ form_widget(form.gareDepart, {
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Saisir la gare de départ'
+                    }
+                }) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.gareArrivee) }}
+                {{ form_widget(form.gareArrivee, {
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Saisir la gare d\'arrivée'
+                    }
+                }) }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form_label(form.heureDepart) }}
+                        {{ form_widget(form.heureDepart, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form_label(form.heureArrivee) }}
+                        {{ form_widget(form.heureArrivee, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer mt-4">
+                <button class="btn-admin btn-primary-admin">
+                    <i class="fas fa-save"></i> {{ button_label|default('Enregistrer') }}
+                </button>
+                <a href="{{ path('app_metro_trajet_index') }}" class="btn-admin btn-outline-admin">
+                    Annuler
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Parking index{% endblock %}
+
+{% block body %}
+    <h1>Parking index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdParking</th>
+                <th>NomParking</th>
+                <th>LocalisationParking</th>
+                <th>Place</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for parking in parkings %}
+            <tr>
+                <td>{{ parking.idParking }}</td>
+                <td>{{ parking.nomParking }}</td>
+                <td>{{ parking.localisationParking }}</td>
+                <td>{{ parking.place }}</td>
+                <td>
+                    <a href="{{ path('app_parking_show', {'idParking': parking.idParking}) }}">show</a>
+                    <a href="{{ path('app_parking_edit', {'idParking': parking.idParking}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_parking_new') }}">Create new</a>
+{% endblock %}

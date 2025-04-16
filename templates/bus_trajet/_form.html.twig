@@ -1,0 +1,38 @@
+{{ form_start(form) }}
+    <div class="form-group">
+        {{ form_label(form.gareDepart) }}
+        {{ form_widget(form.gareDepart) }}
+        {{ form_errors(form.gareDepart) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.gareArrivee) }}
+        {{ form_widget(form.gareArrivee) }}
+        {{ form_errors(form.gareArrivee) }}
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.heureDepart) }}
+                {{ form_widget(form.heureDepart) }}
+                {{ form_errors(form.heureDepart) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.heureArrivee) }}
+                {{ form_widget(form.heureArrivee) }}
+                {{ form_errors(form.heureArrivee) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.numeroTrain) }}
+        {{ form_widget(form.numeroTrain) }}
+        {{ form_errors(form.numeroTrain) }}
+    </div>
+
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

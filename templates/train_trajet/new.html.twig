@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Trajet Train - TuniGo{% endblock %}
+
+{% block body %}
+<div class="admin-container">
+    {% include 'admin/sidebar.html.twig' %}
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Création d'un nouveau trajet</h1>
+            <div class="page-actions">
+                <a href="{{ path('app_train_trajet_index') }}" class="btn-admin btn-outline-admin">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+        </div>
+
+        <div class="card-admin">
+            <div class="card-admin-header">
+                <h5 class="card-admin-title">Formulaire de création</h5>
+            </div>
+            <div class="card-admin-body">
+                {{ include('train_trajet/_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
