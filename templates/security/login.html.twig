@@ -35,19 +35,22 @@
         <div class="floating-form">
             <h2>Connexion</h2>
             
-            <form action="{{ path('app_login') }}" method="post">
+            <form action="{{ path('app_login') }}" method="post" id="login-form" novalidate>
                 <div class="floating-input-container">
                     <input type="email" id="email" name="email" value="{{ last_username }}" class="floating-input" placeholder=" " required autofocus>
                     <label for="email" class="floating-label">Email</label>
+                    <div class="error-message" id="email-error"></div>
                 </div>
 
                 <div class="floating-input-container">
                     <div class="password-field">
                         <input type="password" id="password" name="password" class="floating-input" placeholder=" " required>
+                        <label for="password" class="floating-label">Mot de passe</label>
                         <span class="toggle-password" onclick="togglePasswordVisibility(this)">
                             <i class="fas fa-eye-slash"></i>
                         </span>
                     </div>
+                    <div class="error-message" id="password-error"></div>
                 </div>
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -70,6 +73,7 @@
 
 {% block javascripts %}
 <script>
+// Password visibility toggle
 function togglePasswordVisibility(element) {
     const passwordField = element.parentElement.querySelector('input');
     const eyeIcon = element.querySelector('i');
@@ -84,6 +88,65 @@ function togglePasswordVisibility(element) {
         eyeIcon.classList.add('fa-eye-slash');
     }
 }
+
+// Form validation
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const emailError = document.getElementById('email-error');
+    const passwordError = document.getElementById('password-error');
+    
+    // Validation messages in French
+    const messages = {
+        emailRequired: "L'adresse email est requise",
+        emailInvalid: "Veuillez saisir une adresse email valide",
+        passwordRequired: "Le mot de passe est requis",
+        passwordMinLength: "Le mot de passe doit contenir au moins 6 caractères"
+    };
+    
+    // Email validation function
+    function validateEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+    
+    // Clear error messages when typing
+    emailInput.addEventListener('input', function() {
+        emailError.textContent = '';
+    });
+    
+    passwordInput.addEventListener('input', function() {
+        passwordError.textContent = '';
+    });
+    
+    // Form submission validation
+    loginForm.addEventListener('submit', function(event) {
+        let isValid = true;
+        
+        // Email validation
+        if (!emailInput.value.trim()) {
+            emailError.textContent = messages.emailRequired;
+            isValid = false;
+        } else if (!validateEmail(emailInput.value.trim())) {
+            emailError.textContent = messages.emailInvalid;
+            isValid = false;
+        }
+        
+        // Password validation
+        if (!passwordInput.value) {
+            passwordError.textContent = messages.passwordRequired;
+            isValid = false;
+        } else if (passwordInput.value.length < 6) {
+            passwordError.textContent = messages.passwordMinLength;
+            isValid = false;
+        }
+        
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+});
 </script>
 {% endblock %}
 {% endblock %} 
