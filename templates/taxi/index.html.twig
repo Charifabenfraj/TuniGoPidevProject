@@ -26,20 +26,27 @@
         </div>
         
         <div class="card-admin">
-            <div class="card-admin-header">
-                <h5 class="card-admin-title">Liste des Taxis</h5>
-                <div>
-                    <button class="btn-admin btn-outline-admin btn-sm-admin">
-                        <i class="fas fa-filter"></i> Filtrer
-                    </button>
-                    <button class="btn-admin btn-outline-admin btn-sm-admin">
-                        <i class="fas fa-download"></i> Exporter
-                    </button>
-                </div>
-            </div>
+<div class="card-admin-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <h5 class="card-admin-title" style="margin: 0;">Liste des Taxis</h5>
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <input type="text" id="searchInput" placeholder="Rechercher par nom, prénom, numéro..." 
+               class="form-control form-control-sm" style="width: 600px;" />
+        <div style="display: flex; gap: 8px;">
+            <button class="btn-admin btn-outline-admin btn-sm-admin" onclick="sortTableById(true)">
+                <i class="fas fa-sort-amount-down"></i> Plus récent
+            </button>
+            <button class="btn-admin btn-outline-admin btn-sm-admin" onclick="sortTableById(false)">
+                <i class="fas fa-sort-amount-up"></i> Plus ancien
+            </button>
+            <button class="btn-admin btn-outline-admin btn-sm-admin" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> Exporter
+            </button>
+        </div>
+    </div>
+</div>
             <div class="card-admin-body">
                 <div class="table-responsive">
-                    <table class="table-admin">
+                    <table class="table-admin" id="taxiTable">
                         <thead>
                             <tr>
                                 <th>#ID</th>
@@ -54,23 +61,22 @@
                         </thead>
                         <tbody>
                         {% for taxi in taxis %}
-                            <tr>
+                            <tr class="taxi-row">
                                 <td>{{ taxi.idTaxi }}</td>
                                 <td>{{ taxi.numeroTaxi }}</td>
                                 <td>{{ taxi.numeroChauffeur }}</td>
                                 <td>{{ taxi.prenomChauffeur }}</td>
                                 <td>{{ taxi.nomChauffeur }}</td>
-                                <td>{{ taxi.idReservation }}</td>
+                                <td>{{ taxi.idReservation ? taxi.idReservation : '' }}</td>
                                 <td>{{ taxi.Isdisponible ? 'Oui' : 'Non' }}</td>
                                 <td>
                                     <a href="{{ path('app_taxi_show', {'idTaxi': taxi.idTaxi}) }}" class="btn-action btn-view" title="Voir">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <!-- Modal Trigger: Edit Button -->
                                     <button class="btn-action btn-edit" data-bs-toggle="modal" data-bs-target="#editTaxiModal" 
                                             data-id="{{ taxi.idTaxi }}" data-numero="{{ taxi.numeroTaxi }}" data-chauffeur="{{ taxi.numeroChauffeur }}" 
                                             data-prenom="{{ taxi.prenomChauffeur }}" data-nom="{{ taxi.nomChauffeur }}" 
-                                            data-reservation="{{ taxi.idReservation }}" data-disponible="{{ taxi.Isdisponible }}" title="Modifier">
+                                            data-reservation="{{ taxi.idReservation }}" data-disponible="{{ taxi.Isdisponible ? '1' : '0' }}" title="Modifier">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="btn-action btn-delete" title="Supprimer" 
@@ -108,6 +114,8 @@
             <div class="modal-body">
                 <!-- Form for editing a taxi -->
                 <form id="edit-taxi-form" action="{{ path('app_taxi_edit', {'idTaxi': 0}) }}" method="post">
+                    <input type="hidden" name="_method" value="PUT">
+                    <input type="hidden" name="_token" value="{{ csrf_token('edit') }}">
                     <div class="form-group">
                         <label for="numeroTaxi">Numéro du Taxi</label>
                         <input type="text" class="form-control" id="numeroTaxi" name="numeroTaxi" required>
@@ -126,7 +134,7 @@
                     </div>
                     <div class="form-group">
                         <label for="idReservation">ID Réservation</label>
-                        <input type="text" class="form-control" id="idReservation" name="idReservation" required>
+                        <input type="text" class="form-control" id="idReservation" name="idReservation">
                     </div>
                     <div class="form-group">
                         <label for="Isdisponible">Disponible</label>
@@ -147,57 +155,87 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Modal edit handling
             var editModal = document.getElementById('editTaxiModal');
-            editModal.addEventListener('show.bs.modal', function (event) {
-                var button = event.relatedTarget;
-                var idTaxi = button.getAttribute('data-id');
-                var numeroTaxi = button.getAttribute('data-numero');
-                var chauffeur = button.getAttribute('data-chauffeur');
-                var prenom = button.getAttribute('data-prenom');
-                var nom = button.getAttribute('data-nom');
-                var reservation = button.getAttribute('data-reservation');
-                var disponible = button.getAttribute('data-disponible');
-                
-                var modalForm = editModal.querySelector('form');
-                modalForm.setAttribute('action', '/taxi/' + idTaxi + '/edit');
-                modalForm.querySelector('#numeroTaxi').value = numeroTaxi;
-                modalForm.querySelector('#numeroChauffeur').value = chauffeur;
-                modalForm.querySelector('#prenomChauffeur').value = prenom;
-                modalForm.querySelector('#nomChauffeur').value = nom;
-                modalForm.querySelector('#idReservation').value = reservation;
-                modalForm.querySelector('#Isdisponible').value = disponible;
-            });
+            if (editModal) {
+                editModal.addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    var idTaxi = button.getAttribute('data-id');
+                    var numeroTaxi = button.getAttribute('data-numero');
+                    var numeroChauffeur = button.getAttribute('data-chauffeur');
+                    var prenomChauffeur = button.getAttribute('data-prenom');
+                    var nomChauffeur = button.getAttribute('data-nom');
+                    var idReservation = button.getAttribute('data-reservation');
+                    var disponible = button.getAttribute('data-disponible');
+                    
+                    var modalForm = editModal.querySelector('form');
+                    modalForm.setAttribute('action', '/taxi/' + idTaxi + '/edit');
+                    modalForm.querySelector('#numeroTaxi').value = numeroTaxi;
+                    modalForm.querySelector('#numeroChauffeur').value = numeroChauffeur;
+                    modalForm.querySelector('#prenomChauffeur').value = prenomChauffeur;
+                    modalForm.querySelector('#nomChauffeur').value = nomChauffeur;
+                    modalForm.querySelector('#idReservation').value = idReservation || '';
+                    modalForm.querySelector('#Isdisponible').value = disponible;
+                });
+            }
 
-            var form = document.getElementById('edit-taxi-form');
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                
-                var formData = new FormData(form);
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                let searchValue = e.target.value.toLowerCase();
+                let rows = document.querySelectorAll('.taxi-row');
 
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json',
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Taxi mis à jour avec succès!");
-                        var modal = bootstrap.Modal.getInstance(editModal);
-                        modal.hide();
-                        // Optionally, update the UI with the new taxi details without reloading the page
-                    } else {
-                        alert("Une erreur est survenue, veuillez réessayer.");
+                rows.forEach(row => {
+                    let shouldShow = false;
+                    // Check each cell except actions (last column)
+                    for (let i = 1; i < row.cells.length - 1; i++) {
+                        if (row.cells[i].textContent.toLowerCase().includes(searchValue)) {
+                            shouldShow = true;
+                            break;
+                        }
                     }
-                })
-                .catch(error => {
-                    alert("Une erreur est survenue.");
+                    row.style.display = shouldShow ? '' : 'none';
                 });
             });
         });
+
+        // Sorting functions
+        function sortTableById(isDescending) {
+            let tbody = document.querySelector('#taxiTable tbody');
+            let rows = Array.from(tbody.querySelectorAll('tr.taxi-row'));
+            
+            rows.sort((a, b) => {
+                let idA = parseInt(a.cells[0].textContent);
+                let idB = parseInt(b.cells[0].textContent);
+                return isDescending ? idB - idA : idA - idB;
+            });
+
+            // Clear and re-append rows
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        
+        function exportToExcel() {
+            // Select the table
+            const table = document.getElementById('taxiTable');
+            
+            // Clone the table to avoid modifying the original
+            const clone = table.cloneNode(true);
+            
+            // Remove action buttons from the clone
+            const actionCells = clone.querySelectorAll('td:last-child');
+            actionCells.forEach(cell => {
+                cell.innerHTML = ''; // Clear actions column
+            });
+            
+            // Create workbook
+            const workbook = XLSX.utils.table_to_book(clone, {sheet: "Taxis"});
+            
+            // Export the file
+            XLSX.writeFile(workbook, 'taxis.xlsx');
+        }
     </script>
 {% endblock %}

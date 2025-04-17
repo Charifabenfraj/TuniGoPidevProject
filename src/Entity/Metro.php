@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\MetroRepository;
 
@@ -29,6 +30,17 @@ class Metro
     }
 
     #[ORM\Column(type: 'string',name: 'numerometro', nullable: false)]
+    #[Assert\NotBlank(message: "Le numéro de metro est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^M[0-9]+$/",
+        message: "Le numéro de metro doit commencer par 'M' suivi de chiffres"
+    )]
+    #[Assert\Length(
+        min: 2,
+        max: 10,
+        minMessage: "Le numéro de metro doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le numéro de metro ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $numeroMetro = null;
 
     public function getNumeroMetro(): ?string

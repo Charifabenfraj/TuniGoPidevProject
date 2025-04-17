@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Trajetbus;
 use App\Form\TrajetbusType;
-use App\Repository\TrajetbuRepository;
+use App\Repository\TrajetbusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class TrajetbusController extends AbstractController
 {
     #[Route(name: 'app_trajetbus_index', methods: ['GET'])]
-    public function index(TrajetbuRepository $trajetbuRepository): Response
+    public function index(TrajetbusRepository $trajetbuRepository): Response
     {
         return $this->render('trajetbus/index.html.twig', [
             'trajetbuses' => $trajetbuRepository->findAll(),

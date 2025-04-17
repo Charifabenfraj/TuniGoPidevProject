@@ -6,8 +6,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
 use App\Repository\ScooterRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ScooterRepository::class)]
 #[ORM\Table(name: 'scooter')]
@@ -30,9 +30,20 @@ class Scooter
     }
 
     #[ORM\Column(type: 'string',name: 'numeroScooter', nullable: false)]
-    private ?string $numeroScooter = null;
+    #[Assert\NotBlank(message: "Le numéro de Scooter est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^SC[0-9]+$/",
+        message: "Le numéro de Scooter doit commencer par 'SC' suivi de chiffres"
+    )]
+    #[Assert\Length(
+        min: 4,
+        max: 10,
+        minMessage: "Le numéro de Scooter doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le numéro de Scooter ne peut pas dépasser {{ limit }} caractères"
+    )]
+    private string $numeroScooter;
 
-    public function getNumeroScooter(): ?string
+    public function getNumeroScooter(): string
     {
         return $this->numeroScooter;
     }
@@ -44,9 +55,20 @@ class Scooter
     }
 
     #[ORM\Column(type: 'string',name: 'localisationScooter', nullable: false)]
-    private ?string $localisationScooter = null;
+    #[Assert\NotBlank(message: "La localisation est obligatoire")]
+    #[Assert\Length(
+        min: 4,
+        max: 20,
+        minMessage: "Le numéro doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le numéro ne peut pas dépasser {{ limit }} caractères"
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ\s\-]+$/",
+        message: "La localisation ne doit contenir que des lettres"
+    )]
+    private string $localisationScooter;
 
-    public function getLocalisationScooter(): ?string
+    public function getLocalisationScooter(): string
     {
         return $this->localisationScooter;
     }
@@ -58,6 +80,7 @@ class Scooter
     }
 
     #[ORM\Column(type: 'integer',name: 'idReservation', nullable: true)]
+
     private ?int $idReservation = null;
 
     public function getIdReservation(): ?int
@@ -71,24 +94,33 @@ class Scooter
         return $this;
     }
 
-    #[ORM\Column(type: 'boolean',name: 'Isdisponible', nullable: false)]
-    private ?bool $Isdisponible = null;
+  
 
-    public function isIsdisponible(): ?bool
-    {
-        return $this->Isdisponible;
-    }
+    // src/Entity/Scooter.php
 
-    public function setIsdisponible(bool $Isdisponible): self
-    {
-        $this->Isdisponible = $Isdisponible;
-        return $this;
-    }
+#[ORM\Column(type: 'boolean',name: 'isDisponible', nullable: false)]
+#[Assert\Type(
+    type: 'bool',
+    message: "La disponibilité doit être true (1) ou false (0)"
+)]
+private bool $isDisponible;
+
+public function getIsDisponible(): bool
+{
+    return $this->isDisponible;
+}
+
+public function setIsDisponible(bool $isDisponible): self
+{
+    $this->isDisponible = $isDisponible;
+    return $this;
+}
+
 
     #[ORM\Column(type: 'datetime',name: 'tempsReservation', nullable: false)]
-    private ?\DateTimeInterface $tempsReservation = null;
+    private \DateTimeInterface $tempsReservation;
 
-    public function getTempsReservation(): ?\DateTimeInterface
+    public function getTempsReservation(): \DateTimeInterface
     {
         return $this->tempsReservation;
     }
@@ -100,9 +132,9 @@ class Scooter
     }
 
     #[ORM\Column(type: 'datetime',name: 'tempsArrivee', nullable: false)]
-    private ?\DateTimeInterface $tempsArrivee = null;
+    private \DateTimeInterface $tempsArrivee;
 
-    public function getTempsArrivee(): ?\DateTimeInterface
+    public function getTempsArrivee(): \DateTimeInterface
     {
         return $this->tempsArrivee;
     }
@@ -113,9 +145,13 @@ class Scooter
         return $this;
     }
 
-    public function isdisponible(): ?bool
+    // Constructeur pour initialiser les dates et autres propriétés
+    public function __construct()
     {
-        return $this->Isdisponible;
+        $this->tempsReservation = new \DateTime(); // Date actuelle
+        $this->tempsArrivee = new \DateTime(); // Date actuelle par défaut
+        $this->isDisponible = true; // Valeur par défaut (disponible)
+        $this->numeroScooter = ''; // Valeur par défaut pour numéroScooter (chaine vide)
+        $this->localisationScooter = ''; // Valeur par défaut pour localisationScooter
     }
-
 }

@@ -28,7 +28,6 @@ final class ScooterController extends AbstractController
     {
         $scooter = new Scooter();
     
-        // Assurez-vous que les dates par défaut sont définies avant de persister
         $scooter->setTempsReservation(new \DateTime()); // Date actuelle
         $scooter->setTempsArrivee(new \DateTime()); // Date actuelle
     
@@ -58,9 +57,13 @@ final class ScooterController extends AbstractController
         ]);
     }
 
-    #[Route('/{idScooter}/edit', name: 'app_scooter_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, ScooterRepository $scooterRepository, EntityManagerInterface $entityManager, $idScooter): JsonResponse
-    {
+    #[Route('/{idScooter}/edit', name: 'app_scooter_edit', methods: ['POST'])]
+    public function edit(
+        Request $request,
+        ScooterRepository $scooterRepository,
+        EntityManagerInterface $entityManager,
+        int $idScooter
+    ): JsonResponse {
         $scooter = $scooterRepository->find($idScooter);
     
         if (!$scooter) {
@@ -68,48 +71,52 @@ final class ScooterController extends AbstractController
         }
     
         $numeroScooter = $request->request->get('numeroScooter');
-        $locationScooter = $request->request->get('locationScooter');
-        $reservationId = $request->request->get('reservationId');
-        $isAvailable = $request->request->get('isAvailable');
-        $reservationTime = $request->request->get('reservationTime');
-        $arrivalTime = $request->request->get('arrivalTime');
+        $localisationScooter = $request->request->get('localisationScooter');
+        $idReservation = $request->request->get('idReservation');
+        $isDisponible = $request->request->get('isDisponible');
+        $tempsReservation = $request->request->get('tempsReservation');
+        $tempsArrivee = $request->request->get('tempsArrivee');
     
         if ($numeroScooter !== null) {
             $scooter->setNumeroScooter($numeroScooter);
         }
     
-        if ($locationScooter !== null) {
-            $scooter->setLocationScooter($locationScooter);
+        if ($localisationScooter !== null) {
+            $scooter->setLocalisationScooter($localisationScooter);
         }
     
-        if ($reservationId !== null) {
-            $scooter->setReservationId($reservationId);
+        if ($idReservation !== null) {
+            $scooter->setIdReservation($idReservation);
         }
     
-        if ($reservationTime !== null) {
+        if ($isDisponible !== null) {
+            // Correction ici :
+            $scooter->setIsDisponible(in_array($isDisponible, ['1', 1, true, 'true'], true));
+        }
+    
+        if ($tempsReservation !== null) {
             try {
-                $scooter->setReservationTime(new \DateTime($reservationTime));
+                $scooter->setTempsReservation(new \DateTime($tempsReservation));
             } catch (\Exception $e) {
                 return new JsonResponse(['success' => false, 'message' => 'Invalid reservation time'], 400);
             }
         }
     
-        if ($isAvailable !== null) {
-            $scooter->setIsAvailable($isAvailable === '1'); 
-        }
-    
-        if ($arrivalTime !== null) {
+        if ($tempsArrivee !== null) {
             try {
-                $scooter->setArrivalTime(new \DateTime($arrivalTime));
+                // Correction ici :
+                $scooter->setTempsArrivee(new \DateTime($tempsArrivee));
             } catch (\Exception $e) {
                 return new JsonResponse(['success' => false, 'message' => 'Invalid arrival time'], 400);
             }
         }
     
+        $entityManager->persist($scooter); // Optionnel mais conseillé
         $entityManager->flush();
     
         return new JsonResponse(['success' => true, 'message' => 'Scooter updated successfully']);
     }
+    
 
     #[Route('/{idScooter}', name: 'app_scooter_delete', methods: ['POST'])]
     public function delete(Request $request, Scooter $scooter, EntityManagerInterface $entityManager): Response

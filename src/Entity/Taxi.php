@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\TaxiRepository;
 
@@ -29,6 +30,17 @@ class Taxi
     }
 
     #[ORM\Column(type: 'string',name: 'numeroTaxi', nullable: false)]
+    #[Assert\NotBlank(message: "Le numéro de Taxi est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^TX[0-9]+$/",
+        message: "Le numéro de Taxi doit commencer par 'TX' suivi de chiffres"
+    )]
+    #[Assert\Length(
+        min: 4,
+        max: 10,
+        minMessage: "Le numéro de Taxi doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le numéro de Taxi ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $numeroTaxi = null;
 
     public function getNumeroTaxi(): ?string
@@ -43,6 +55,17 @@ class Taxi
     }
 
     #[ORM\Column(type: 'string',name: 'numeroChauffeur', nullable: false)]
+    #[Assert\NotBlank(message: "Le numéro de Chauffeur est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^CH[0-9]+$/",
+        message: "Le numéro de Chauffeur doit commencer par 'CH' suivi de chiffres"
+    )]
+    #[Assert\Length(
+        min: 4,
+        max: 10,
+        minMessage: "Le numéro de Chauffeur doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le numéro de Chauffeur ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $numeroChauffeur = null;
 
     public function getNumeroChauffeur(): ?string
@@ -57,6 +80,17 @@ class Taxi
     }
 
     #[ORM\Column(type: 'string',name: 'prenomChauffeur', nullable: false)]
+    #[Assert\NotBlank(message: "Le prenom de Chauffeur est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ\s\-]+$/",
+        message: "Le prenom de Chauffeur ne doit contenir que des lettres"
+    )]
+    #[Assert\Length(
+        min: 3,
+        max: 10,
+        minMessage: "Le prenom de Chauffeur doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le prenom de Chauffeur ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $prenomChauffeur = null;
 
     public function getPrenomChauffeur(): ?string
@@ -71,6 +105,17 @@ class Taxi
     }
 
     #[ORM\Column(type: 'string',name: 'nomChauffeur', nullable: false)]
+    #[Assert\NotBlank(message: "Le nom de Chauffeur est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ\s\-]+$/",
+        message: "Le nom de Chauffeur ne doit contenir que des lettres"
+    )]
+    #[Assert\Length(
+        min: 3,
+        max: 10,
+        minMessage: "Le nom de Chauffeur doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le nom de Chauffeur ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $nomChauffeur = null;
 
     public function getNomChauffeur(): ?string
@@ -99,6 +144,7 @@ class Taxi
     }
 
     #[ORM\Column(type: 'boolean',name: 'Isdisponible', nullable: false)]
+    
     private ?bool $Isdisponible = null;
 
     public function isIsdisponible(): ?bool

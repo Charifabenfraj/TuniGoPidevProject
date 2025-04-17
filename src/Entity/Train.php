@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\TrainRepository;
 
@@ -29,6 +30,17 @@ class Train
     }
 
     #[ORM\Column(type: 'string',name: 'numeroTrain', nullable: false)]
+    #[Assert\NotBlank(message: "Le numéro de train est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^TN-[0-9]+$/",
+        message: "Le numéro de train doit commencer par 'TN-' suivi de chiffres"
+    )]
+    #[Assert\Length(
+        min: 2,
+        max: 10,
+        minMessage: "Le numéro de train doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le numéro de train ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $numeroTrain = null;
 
     public function getNumeroTrain(): ?string
