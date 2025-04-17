@@ -42,9 +42,10 @@ class Train
         return $this;
     }
 
-    #[ORM\Column(type: 'integer',name: 'idTrajetTrain', nullable: true)]
-    private ?int $idTrajetTrain = null;
-
+    #[ORM\ManyToOne(targetEntity: Train::class)]
+    #[ORM\OneToMany(mappedBy: "train", targetEntity: TrainTrajet::class)]
+    private Collection $trajets;
+    
     public function getIdTrajetTrain(): ?int
     {
         return $this->idTrajetTrain;

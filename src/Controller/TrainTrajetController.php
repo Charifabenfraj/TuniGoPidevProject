@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/train/trajet')]
+#[Route('/train-trajet')]
 final class TrainTrajetController extends AbstractController
 {
     #[Route(name: 'app_train_trajet_index', methods: ['GET'])]
@@ -28,17 +28,17 @@ final class TrainTrajetController extends AbstractController
         $trainTrajet = new TrainTrajet();
         $form = $this->createForm(TrainTrajetType::class, $trainTrajet);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($trainTrajet);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_train_trajet_index', [], Response::HTTP_SEE_OTHER);
+            
+            $this->addFlash('success', 'Trajet ajouté avec succès');
+            return $this->redirectToRoute('app_train_trajet_index');
         }
-
+    
         return $this->render('train_trajet/new.html.twig', [
-            'train_trajet' => $trainTrajet,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -58,20 +58,21 @@ final class TrainTrajetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_train_trajet_index', [], Response::HTTP_SEE_OTHER);
+            
+            $this->addFlash('success', 'Trajet mis à jour avec succès');
+            return $this->redirectToRoute('app_train_trajet_index');
         }
 
         return $this->render('train_trajet/edit.html.twig', [
+            'form' => $form->createView(),
             'train_trajet' => $trainTrajet,
-            'form' => $form,
         ]);
     }
 
     #[Route('/{id}', name: 'app_train_trajet_delete', methods: ['POST'])]
     public function delete(Request $request, TrainTrajet $trainTrajet, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$trainTrajet->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$trainTrajet->getId(), $request->request->get('_token'))) {
             $entityManager->remove($trainTrajet);
             $entityManager->flush();
         }

@@ -9,36 +9,53 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Security; // Ajout du namespace pour Security
+use Symfony\Component\Routing\Annotation\Route;
+
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Writer\PngWriter;
+
+
 
 #[Route('/reservation')]
 final class ReservationController extends AbstractController
 {
-<<<<<<< HEAD
     #[Route('/reservation', name: 'app_reservation_index')]
-    public function index(ReservationRepository $reservationRepository): Response
+public function index(Request $request, ReservationRepository $reservationRepository): Response
 {
+    $search = $request->query->get('search', '');
+    $sortBy = $request->query->get('sort_by', 'idRes');
+    $order = $request->query->get('order', 'ASC');
+
+    $reservations = $reservationRepository->findBySearchAndSort($search, $sortBy, $order);
+
     return $this->render('reservation/index.html.twig', [
-        'reservations' => $reservationRepository->findAll(),
+        'reservations' => $reservations,
+        'search' => $search,
+        'sort_by' => $sortBy,
+        'order' => $order,
     ]);
 }
-=======
-    #[Route(name: 'app_reservation_index', methods: ['GET'])]
-    public function index(ReservationRepository $reservationRepository): Response
-    {
-        return $this->render('reservation/index.html.twig', [
-            'reservations' => $reservationRepository->findAll(),
-        ]);
-    }
->>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         $reservation = new Reservation();
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
+        // Récupérer l'utilisateur authentifié
+        $user = $security->getUser();
+        if ($user) {
+            $nomComplet = $user->getPrenomUtilisateur() . ' ' . $user->getNomUtilisateur();
+            $reservation->setNomUser($nomComplet);
+        }
+        // Génération automatique du code de confirmation
+        $confirmationCode = strtoupper(bin2hex(random_bytes(5)));
+        $reservation->setConfirmationCode($confirmationCode);
+
+        // Gestion du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($reservation);
             $entityManager->flush();
@@ -48,16 +65,29 @@ final class ReservationController extends AbstractController
 
         return $this->render('reservation/new.html.twig', [
             'reservation' => $reservation,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{idRes}', name: 'app_reservation_show', methods: ['GET'])]
     public function show(Reservation $reservation): Response
     {
-        return $this->render('reservation/show.html.twig', [
-            'reservation' => $reservation,
-        ]);
+        $data = "Réservation ID: {$reservation->getIdRes()}\nNom: {$reservation->getNomUser()}\nDate: {$reservation->getDateRes()?->format('Y-m-d')}";
+
+    $result = Builder::create()
+        ->writer(new PngWriter())
+        ->data($data)
+        ->encoding(new Encoding('UTF-8'))
+        ->size(200)
+        ->build();
+
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+
+    return $this->render('reservation/show.html.twig', [
+        'reservation' => $reservation,
+        'qrCodeBase64' => $qrCodeBase64,
+    ]);
+       
     }
 
     #[Route('/{idRes}/edit', name: 'app_reservation_edit', methods: ['GET', 'POST'])]
@@ -65,27 +95,33 @@ final class ReservationController extends AbstractController
     {
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
+    
+            // Ajouter un message flash après la modification de la réservation
+            $this->addFlash('success', 'La réservation a été modifiée avec succès !');
+    
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
-
+    
         return $this->render('reservation/edit.html.twig', [
             'reservation' => $reservation,
             'form' => $form,
         ]);
     }
-
+    
     #[Route('/{idRes}', name: 'app_reservation_delete', methods: ['POST'])]
     public function delete(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reservation->getIdRes(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$reservation->getIdRes(), $request->get('_token'))) {
             $entityManager->remove($reservation);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
+
+  
+
 }

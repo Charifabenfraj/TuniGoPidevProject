@@ -16,11 +16,8 @@ class Reservation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-<<<<<<< HEAD
-    private ?int $idRes ; 
-=======
     private ?int $idRes = null;
->>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
+
 
     public function getIdRes(): ?int
     {

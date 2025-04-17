@@ -1,4 +1,65 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.gareDepart, 'Gare de départ', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.gareDepart, {'attr': {'class': 'form-control'}}) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.gareDepart) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.gareArrivee, 'Gare d\'arrivée', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.gareArrivee, {'attr': {'class': 'form-control'}}) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.gareArrivee) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.heureDepart, 'Heure de départ', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.heureDepart, {'attr': {'class': 'form-control timepicker'}}) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.heureDepart) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.heureArrivee, 'Heure d\'arrivée', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.heureArrivee, {'attr': {'class': 'form-control timepicker'}}) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.heureArrivee) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                {{ form_label(form.train, 'Numéro du train', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.train, {'attr': {'class': 'form-control'}}) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.train) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-save me-2"></i> {{ button_label|default('Enregistrer') }}
+        </button>
+        
+        <a href="{{ path('app_train_trajet_index') }}" class="btn btn-secondary">
+            <i class="fas fa-times me-2"></i> Annuler
+        </a>
+    </div>
+
 {{ form_end(form) }}

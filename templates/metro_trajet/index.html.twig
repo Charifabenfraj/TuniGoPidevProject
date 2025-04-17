@@ -1,41 +1,96 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}MetroTrajet index{% endblock %}
+{% block title %}Gestion des Trajets Métro - TuniGo{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ asset('styles/admin.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-    <h1>MetroTrajet index</h1>
+<div class="admin-container">
+    <!-- Sidebar -->
+    {% include 'admin/sidebar.html.twig' %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>GareDepart</th>
-                <th>GareArrivee</th>
-                <th>HeureDepart</th>
-                <th>HeureArrivee</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for metro_trajet in metro_trajets %}
-            <tr>
-                <td>{{ metro_trajet.id }}</td>
-                <td>{{ metro_trajet.gareDepart }}</td>
-                <td>{{ metro_trajet.gareArrivee }}</td>
-                <td>{{ metro_trajet.heureDepart ? metro_trajet.heureDepart|date('H:i:s') : '' }}</td>
-                <td>{{ metro_trajet.heureArrivee ? metro_trajet.heureArrivee|date('H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_metro_trajet_show', {'id': metro_trajet.id}) }}">show</a>
-                    <a href="{{ path('app_metro_trajet_edit', {'id': metro_trajet.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_metro_trajet_new') }}">Create new</a>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Gestion des Trajets Métro</h1>
+            <div class="page-actions">
+                <a href="{{ path('app_metro_trajet_new') }}" class="btn-admin btn-primary-admin">
+                    <i class="fas fa-plus"></i> Nouveau trajet
+                </a>
+            </div>
+        </div>
+        
+        <div class="card-admin">
+            <div class="card-admin-header">
+                <h5 class="card-admin-title">Liste des trajets</h5>
+                <div>
+                    <button class="btn-admin btn-outline-admin btn-sm-admin">
+                        <i class="fas fa-filter"></i> Filtrer
+                    </button>
+                    <button class="btn-admin btn-outline-admin btn-sm-admin">
+                        <i class="fas fa-download"></i> Exporter
+                    </button>
+                </div>
+            </div>
+            <div class="card-admin-body">
+                <div class="table-responsive">
+                    <table class="table-admin">
+                        <thead>
+                            <tr>
+                                <th>#ID</th>
+                                <th>Gare Départ</th>
+                                <th>Gare Arrivée</th>
+                                <th>Heure Départ</th>
+                                <th>Heure Arrivée</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for metro_trajet in metro_trajets %}
+                            <tr>
+                                <td>{{ metro_trajet.id }}</td>
+                                <td>{{ metro_trajet.gareDepart }}</td>
+                                <td>{{ metro_trajet.gareArrivee }}</td>
+                                <td>{{ metro_trajet.heureDepart|date('H:i') }}</td>
+                                <td>{{ metro_trajet.heureArrivee|date('H:i') }}</td>
+                                <td>
+                                    <a href="{{ path('app_metro_trajet_show', {'id': metro_trajet.id}) }}" 
+                                       class="btn-action btn-view" title="Voir">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_metro_trajet_edit', {'id': metro_trajet.id}) }}" 
+                                       class="btn-action btn-edit" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button class="btn-action btn-delete" title="Supprimer" 
+                                           onclick="if(confirm('Supprimer ce trajet ?')) { 
+                                               document.getElementById('delete-form-{{ metro_trajet.id }}').submit(); 
+                                           }">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <form id="delete-form-{{ metro_trajet.id }}" 
+                                          action="{{ path('app_metro_trajet_delete', {'id': metro_trajet.id}) }}" 
+                                          method="post" 
+                                          style="display: none;">
+                                        <input type="hidden" name="_token" 
+                                               value="{{ csrf_token('delete' ~ metro_trajet.id) }}">
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucun trajet trouvé</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

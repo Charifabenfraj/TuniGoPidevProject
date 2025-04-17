@@ -16,28 +16,36 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
-    //    /**
-    //     * @return Reservation[] Returns an array of Reservation objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Récupère les réservations en fonction d’un terme de recherche et d’un critère de tri
+     *
+     * @param string|null $search Terme de recherche (nom utilisateur, moyen, moyen de paiement, etc.)
+     * @param string $sortBy Champ par lequel trier (idRes, nomUser, dateRes, moyenPaiement, etc.)
+     * @param string $order ASC ou DESC
+     * @return Reservation[]
+     */
+    public function findBySearchAndSort(?string $search, string $sortBy = 'idRes', string $order = 'ASC'): array
+    {
+        $qb = $this->createQueryBuilder('r');
 
-    //    public function findOneBySomeField($value): ?Reservation
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!empty($search)) {
+            $qb->andWhere('r.nomUser LIKE :search 
+                        OR r.moyen LIKE :search 
+                        OR r.moyenPaiement LIKE :search 
+                        OR r.confirmationCode LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Liste blanche des champs autorisés pour éviter les injections SQL
+        $allowedSortFields = ['idRes', 'nomUser', 'moyen', 'dateRes', 'moyenPaiement', 'confirmationCode'];
+        if (!in_array($sortBy, $allowedSortFields)) {
+            $sortBy = 'idRes';
+        }
+
+        $order = strtoupper($order) === 'DESC' ? 'DESC' : 'ASC';
+
+        $qb->orderBy('r.' . $sortBy, $order);
+
+        return $qb->getQuery()->getResult();
+    }
 }

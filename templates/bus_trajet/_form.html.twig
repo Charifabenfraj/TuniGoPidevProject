@@ -1,4 +1,167 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{# templates/bus_trajet/_form.html.twig #}
+
+{{ form_start(form, {'attr': {'id': 'busTrajetForm', 'novalidate': 'novalidate'}}) }}
+
+    <div class="form-row">
+        <div class="form-group">
+            {{ form_label(form.bus) }}
+            {{ form_widget(form.bus, {
+                'attr': {
+                    'id':'numeroBus',
+                    'class':'form-control' ~ (form.bus.vars.errors ? ' is-invalid' : '')
+                }
+            }) }}
+            <small class="text-danger" id="numeroBusError"></small>
+            {{ form_errors(form.bus) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.stationDepart) }}
+            {{ form_widget(form.stationDepart, {
+                'attr': {
+                    'id':'stationDepart',
+                    'class':'form-control' ~ (form.stationDepart.vars.errors ? ' is-invalid' : '')
+                }
+            }) }}
+            <small class="text-danger" id="stationDepartError"></small>
+            {{ form_errors(form.stationDepart) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.stationArrivee) }}
+            {{ form_widget(form.stationArrivee, {
+                'attr': {
+                    'id':'stationArrivee',
+                    'class':'form-control' ~ (form.stationArrivee.vars.errors ? ' is-invalid' : '')
+                }
+            }) }}
+            <small class="text-danger" id="stationArriveeError"></small>
+            {{ form_errors(form.stationArrivee) }}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.heureDepart) }}
+                {{ form_widget(form.heureDepart, {
+                    'attr': {
+                        'id':'heureDepart',
+                        'type':'time',
+                        'class':'form-control' ~ (form.heureDepart.vars.errors ? ' is-invalid' : '')
+                    }
+                }) }}
+                <small class="text-danger" id="heureDepartError"></small>
+                {{ form_errors(form.heureDepart) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.heureArrivee) }}
+                {{ form_widget(form.heureArrivee, {
+                    'attr': {
+                        'id':'heureArrivee',
+                        'type':'time',
+                        'class':'form-control' ~ (form.heureArrivee.vars.errors ? ' is-invalid' : '')
+                    }
+                }) }}
+                <small class="text-danger" id="heureArriveeError"></small>
+                {{ form_errors(form.heureArrivee) }}
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+
 {{ form_end(form) }}
+
+<script>
+document.getElementById('busTrajetForm').addEventListener('submit', function(e) {
+    let isValid = true;
+    clearErrors();
+
+    // Validation du bus
+    const bus = document.getElementById('numeroBus');
+    if (!bus.value) {
+        showError('numeroBusError', 'Veuillez sélectionner un bus');
+        isValid = false;
+    }
+
+    // Validation station départ
+    const stationDepart = document.getElementById('stationDepart');
+    if (!stationDepart.value.trim()) {
+        showError('stationDepartError', 'La station de départ est obligatoire');
+        isValid = false;
+    }
+
+    // Validation station arrivée
+    const stationArrivee = document.getElementById('stationArrivee');
+    if (!stationArrivee.value.trim()) {
+        showError('stationArriveeError', 'La station d\'arrivée est obligatoire');
+        isValid = false;
+    }
+
+    // Validation format heure départ
+    const heureDepart = document.getElementById('heureDepart');
+    const heureDepartRegex = /^([0-1]\d|2[0-3]):([0-5]\d)$/;
+    if (!heureDepart.value.match(heureDepartRegex)) {
+        showError('heureDepartError', 'Format HH:MM requis');
+        isValid = false;
+    }
+
+    // Validation format heure arrivée
+    const heureArrivee = document.getElementById('heureArrivee');
+    const heureArriveeRegex = /^([0-1]\d|2[0-3]):([0-5]\d)$/;
+    if (!heureArrivee.value.match(heureArriveeRegex)) {
+        showError('heureArriveeError', 'Format HH:MM requis');
+        isValid = false;
+    }
+
+    // Comparaison des heures
+    if (isValid) {
+        const [hDepart, mDepart] = heureDepart.value.split(':').map(Number);
+        const [hArrivee, mArrivee] = heureArrivee.value.split(':').map(Number);
+        const totalDepart = hDepart * 60 + mDepart;
+        const totalArrivee = hArrivee * 60 + mArrivee;
+
+        if (totalArrivee <= totalDepart) {
+            showError('heureArriveeError', 'L\'heure d\'arrivée doit être après le départ');
+            isValid = false;
+        }
+    }
+
+    if (!isValid) {
+        e.preventDefault();
+    }
+});
+
+function showError(elementId, message) {
+    const errorElement = document.getElementById(elementId);
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+}
+
+function clearErrors() {
+    document.querySelectorAll('.text-danger').forEach(element => {
+        element.textContent = '';
+        element.style.display = 'none';
+    });
+}
+
+// Validation en temps réel
+['input', 'change'].forEach(event => {
+    document.getElementById('heureDepart').addEventListener(event, validateTime);
+    document.getElementById('heureArrivee').addEventListener(event, validateTime);
+});
+
+function validateTime(e) {
+    const field = e.target;
+    const regex = /^([0-1]\d|2[0-3]):([0-5]\d)$/;
+    
+    if (!field.value.match(regex)) {
+        showError(field.id + 'Error', 'Format HH:MM requis');
+    } else {
+        document.getElementById(field.id + 'Error').textContent = '';
+    }
+}
+</script>

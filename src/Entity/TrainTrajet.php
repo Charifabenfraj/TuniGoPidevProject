@@ -1,12 +1,11 @@
 <?php
+// src/Entity/TrainTrajet.php
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
 use App\Repository\TrainTrajetRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrainTrajetRepository::class)]
 #[ORM\Table(name: 'train_trajet')]
@@ -14,148 +13,82 @@ class TrainTrajet
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', name: 'id')]
     private ?int $id = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
+    #[ORM\Column(type: 'string', length: 255, name: 'gare_depart')]
+    #[Assert\NotBlank(message: 'La gare de départ est obligatoire.')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'La gare de départ ne peut dépasser {{ limit }} caractères.'
+    )]
+    private ?string $gareDepart = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'gare_arrivee')]
+    #[Assert\NotBlank(message: 'La gare d\'arrivée est obligatoire.')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'La gare d\'arrivée ne peut dépasser {{ limit }} caractères.'
+    )]
+    private ?string $gareArrivee = null;
+
+    #[ORM\Column(type: 'string', length: 5, name: 'heure_depart')]
+    #[Assert\NotBlank(message: 'L\'heure de départ est obligatoire.')]
+    #[Assert\Regex(
+        pattern: '/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/',
+        message: 'Le format de l\'heure de départ doit être HH:MM (ex: 14:30).'
+    )]
+    private ?string $heureDepart = null;
+
+    #[ORM\Column(type: 'string', length: 5, name: 'heure_arrivee')]
+    #[Assert\NotBlank(message: 'L\'heure d\'arrivée est obligatoire.')]
+    #[Assert\Regex(
+        pattern: '/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/',
+        message: 'Le format de l\'heure d\'arrivée doit être HH:MM (ex: 18:45).'
+    )]
+    #[Assert\GreaterThan(
+        propertyPath: "heureDepart",
+        message: "L'heure d'arrivée doit être postérieure à l'heure de départ."
+    )]
+    private ?string $heureArrivee = null;
+
+
+    #[ORM\ManyToOne(targetEntity: Train::class)]
+    #[ORM\JoinColumn(name: "train_id", referencedColumnName: "idTrain")] // ✅ Correct
+    private ?Train $train = null;
+
+
+    // ... Getters & Setters ...
+
+    public function getId(): ?int { return $this->id; }
+
+    public function getGareDepart(): ?string { return $this->gareDepart; }
+    public function setGareDepart(string $g): self { 
+        $this->gareDepart = $g; 
+        return $this; 
     }
 
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
+    public function getGareArrivee(): ?string { return $this->gareArrivee; }
+    public function setGareArrivee(string $g): self { 
+        $this->gareArrivee = $g; 
+        return $this; 
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $gare_depart = null;
-
-    public function getGare_depart(): ?string
-    {
-        return $this->gare_depart;
+    public function getHeureDepart(): ?string { return $this->heureDepart; }
+    public function setHeureDepart(string $heureDepart): self { 
+        $this->heureDepart = $heureDepart; 
+        return $this; 
     }
 
-    public function setGare_depart(string $gare_depart): self
-    {
-        $this->gare_depart = $gare_depart;
-        return $this;
+    public function getHeureArrivee(): ?string { return $this->heureArrivee; }
+    public function setHeureArrivee(string $heureArrivee): self { 
+        $this->heureArrivee = $heureArrivee; 
+        return $this; 
     }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $gare_arrivee = null;
-
-    public function getGare_arrivee(): ?string
-    {
-        return $this->gare_arrivee;
-    }
-
-    public function setGare_arrivee(string $gare_arrivee): self
-    {
-        $this->gare_arrivee = $gare_arrivee;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $heure_depart = null;
-
-    public function getHeure_depart(): ?string
-    {
-        return $this->heure_depart;
-    }
-
-    public function setHeure_depart(string $heure_depart): self
-    {
-        $this->heure_depart = $heure_depart;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $heure_arrivee = null;
-
-    public function getHeure_arrivee(): ?string
-    {
-        return $this->heure_arrivee;
-    }
-
-    public function setHeure_arrivee(string $heure_arrivee): self
-    {
-        $this->heure_arrivee = $heure_arrivee;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $numero_train = null;
-
-    public function getNumero_train(): ?string
-    {
-        return $this->numero_train;
-    }
-
-    public function setNumero_train(string $numero_train): self
-    {
-        $this->numero_train = $numero_train;
-        return $this;
-    }
-
-    public function getGareDepart(): ?string
-    {
-        return $this->gare_depart;
-    }
-
-    public function setGareDepart(string $gare_depart): static
-    {
-        $this->gare_depart = $gare_depart;
-
-        return $this;
-    }
-
-    public function getGareArrivee(): ?string
-    {
-        return $this->gare_arrivee;
-    }
-
-    public function setGareArrivee(string $gare_arrivee): static
-    {
-        $this->gare_arrivee = $gare_arrivee;
-
-        return $this;
-    }
-
-    public function getHeureDepart(): ?string
-    {
-        return $this->heure_depart;
-    }
-
-    public function setHeureDepart(string $heure_depart): static
-    {
-        $this->heure_depart = $heure_depart;
-
-        return $this;
-    }
-
-    public function getHeureArrivee(): ?string
-    {
-        return $this->heure_arrivee;
-    }
-
-    public function setHeureArrivee(string $heure_arrivee): static
-    {
-        $this->heure_arrivee = $heure_arrivee;
-
-        return $this;
-    }
-
-    public function getNumeroTrain(): ?string
-    {
-        return $this->numero_train;
-    }
-
-    public function setNumeroTrain(string $numero_train): static
-    {
-        $this->numero_train = $numero_train;
-
-        return $this;
+    public function getTrain(): ?Train { return $this->train; }
+    public function setTrain(?Train $train): self { 
+        $this->train = $train; 
+        return $this; 
     }
 
 }

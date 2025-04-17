@@ -97,11 +97,11 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         
         // Based on the role, redirect to different pages
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
-            return new RedirectResponse($this->urlGenerator->generate('app_admin_dashboard'));
+            return new RedirectResponse($this->urlGenerator->generate('app_reservation_index'));
         }
         
         // Default redirect for regular users
-        return new RedirectResponse($this->urlGenerator->generate('app_home'));
+        return new RedirectResponse($this->urlGenerator->generate('app_reservation_index'));
     }
 
     public function onAuthenticationFailure(Request $request, \Symfony\Component\Security\Core\Exception\AuthenticationException $exception): Response

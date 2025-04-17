@@ -1,138 +1,157 @@
 {% extends 'base.html.twig' %}
 
-<<<<<<< HEAD
-{% block title %}Reservation {% endblock %}
+{% block title %}Réservations - TuniGo Admin{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="{{ asset('styles/admin.css') }}" rel="stylesheet">
+    <style>
+
+    .btn-refresh-admin {
+    background-color:rgb(56, 29, 31);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.btn-refresh-admin:hover {
+    background-color:rgb(53, 24, 27);
+}
+
+        .search-container, .sort-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .search-container input, .sort-container select {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 60%; /* Adjust input width */
+        }
+
+        .search-container button, .sort-container button {
+            padding: 10px 15px;
+            font-size: 14px;
+            background-color: #dc3545; /* Red for buttons */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-container button:hover, .sort-container button:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .table-container {
+            margin-top: 30px;
+        }
+
+        .table th, .table td {
+            text-align: center;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
 <div class="admin-container">
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-brand">
-                <i class="fas fa-bus"></i>
-                <span>TuniGo Admin</span>
-            </div>
-        </div>
-        
-        <ul class="sidebar-menu">
-            <li class="sidebar-item">
-                <a href="{{ path('app_admin_dashboard') }}" class="sidebar-link {% if app.request.get('_route') == 'app_admin_dashboard' %}active{% endif %}">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Tableau de bord</span>
-                </a>
-            </li>
-            
-            <div class="sidebar-divider"></div>
-            
-            <li class="sidebar-item">
-                <a href="{{ path('app_utilisateur_index') }}" class="sidebar-link {% if app.request.get('_route') starts with 'app_utilisateur_' %}active{% endif %}">
-                    <i class="fas fa-users"></i>
-                    <span>Gestion Utilisateurs</span>
-                </a>
-            </li>
-            
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
-                    <i class="fas fa-subway"></i>
-                    <span>Gestion Transport</span>
-                </a>
-            </li>
-            
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
-                    <i class="fas fa-route"></i>
-                    <span>Gestion Trajets</span>
-                </a>
-            </li>
-            
-            <li class="sidebar-item">
-                <a href="{{ path('app_reservation_index') }}" class="sidebar-link">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Gestion Réservations</span>
-                </a>
-            </li>
-            
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>Gestion Réclamations</span>
-                </a>
-            </li>
-            
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
-                    <i class="fas fa-parking"></i>
-                    <span>Gestion Parking</span>
-                </a>
-            </li>
-            
-            <div class="sidebar-divider"></div>
-            
-            <li class="sidebar-item">
-                <a href="{{ path('app_logout') }}" class="sidebar-link">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Se déconnecter</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-    
+    {% include 'admin/sidebar.html.twig' %}
+
     <!-- Main Content -->
     <div class="main-content">
         <div class="page-header">
-            <h1 class="page-title">Gestion des Utilisateurs</h1>
+            <h1 class="page-title">Gestion des Réservations</h1>
             <div class="page-actions">
-                <a href="{{ path('app_utilisateur_new') }}" class="btn-admin btn-primary-admin">
-                    <i class="fas fa-plus"></i> Ajouter un utilisateur
+                <a href="{{ path('app_reservation_new') }}" class="btn-admin btn-primary-admin">
+                    <i class="fas fa-plus"></i> Nouvelle Réservation
                 </a>
             </div>
+             <a href="{{ path('app_reservation_index') }}" class="btn-admin btn-refresh-admin">
+        <i class="fas fa-sync-alt"></i> Rafraîchir
+        
+
+    </a>
+  
+
+
         </div>
-=======
-{% block title %}Reservation index{% endblock %}
 
-{% block body %}
->>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
-    <h1>Reservation index</h1>
+        <!-- Search Form -->
+        <div class="search-container">
+            <form method="get" action="{{ path('app_reservation_index') }}" style="width: 80%;">
+                <input type="text" name="search" placeholder="Rechercher par nom, moyen..." value="{{ app.request.query.get('search') }}">
+                <button type="submit">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </form>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>IdRes</th>
-                <th>NomUser</th>
-                <th>Moyen</th>
-                <th>DateRes</th>
-                <th>MoyenPaiement</th>
-                <th>ConfirmationCode</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for reservation in reservations %}
-            <tr>
-                <td>{{ reservation.idRes }}</td>
-                <td>{{ reservation.nomUser }}</td>
-                <td>{{ reservation.moyen }}</td>
-                <td>{{ reservation.dateRes ? reservation.dateRes|date('Y-m-d') : '' }}</td>
-                <td>{{ reservation.moyenPaiement }}</td>
-                <td>{{ reservation.confirmationCode }}</td>
-                <td>
-                    <a href="{{ path('app_reservation_show', {'idRes': reservation.idRes}) }}">show</a>
-                    <a href="{{ path('app_reservation_edit', {'idRes': reservation.idRes}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <!-- Sort Options -->
+        <div class="sort-container">
+            <form method="get" action="{{ path('app_reservation_index') }}" style="width: 40%;">
+                <label for="sort_by">Trier par :</label>
+                <select name="sort_by" id="sort_by">
+                    <option value="idRes" {% if app.request.query.get('sort_by') == 'idRes' %}selected{% endif %}>ID Réservation</option>
+                    <option value="nomUser" {% if app.request.query.get('sort_by') == 'nomUser' %}selected{% endif %}>Nom Utilisateur</option>
+                    <option value="dateRes" {% if app.request.query.get('sort_by') == 'dateRes' %}selected{% endif %}>Date Réservation</option>
+                    <option value="moyenPaiement" {% if app.request.query.get('sort_by') == 'moyenPaiement' %}selected{% endif %}>Moyen de Paiement</option>
+                </select>
+                <button type="submit">
+                    <i class="fas fa-sort"></i> Trier
+                </button>
+            </form>
+        </div>
 
-    <a href="{{ path('app_reservation_new') }}">Create new</a>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom utilisateur</th>
+                        <th>Moyen</th>
+                        <th>Date réservation</th>
+                        <th>Moyen de paiement</th>
+                        <th>Code de confirmation</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservations %}
+                        <tr>
+                            <td>{{ reservation.idRes }}</td>
+                            <td>{{ reservation.nomUser }}</td>
+                            <td>{{ reservation.moyen }}</td>
+                            <td>{{ reservation.dateRes ? reservation.dateRes|date('Y-m-d') : '' }}</td>
+                            <td>{{ reservation.moyenPaiement }}</td>
+                            <td>{{ reservation.confirmationCode }}</td>
+                            <td>
+                                <a class="btn-action" href="{{ path('app_reservation_show', {'idRes': reservation.idRes}) }}">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a class="btn-action" href="{{ path('app_reservation_edit', {'idRes': reservation.idRes}) }}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                          
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">Aucune réservation trouvée.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

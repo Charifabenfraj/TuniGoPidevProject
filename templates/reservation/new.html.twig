@@ -1,11 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Reservation{% endblock %}
+{% block title %}Réservations - TuniGo Admin{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ asset('styles/admin.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Reservation</h1>
+<div class="admin-container">
+    <!-- Sidebar -->
+    {% include 'admin/sidebar.html.twig' %}
 
-    {{ include('reservation/_form.html.twig') }}
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Gestion des Réservations</h1>
+            <div class="page-actions">
+                <a href="{{ path('app_reservation_new') }}" class="btn-admin btn-primary-admin">
+                    <i class="fas fa-plus"></i> Nouvelle Réservation
+                    
+                </a>
+                 <a href="{{ path('app_reservation_index') }}" class="btn-admin btn-secondary-admin">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+        </div>
 
-    <a href="{{ path('app_reservation_index') }}">back to list</a>
+        <!-- Form for new reservation -->
+        <div class="form-container">
+            <h2>Create New Reservation</h2>
+            {{ include('reservation/_form.html.twig') }}
+        </div>
+
+     
+    </div>
+</div>
 {% endblock %}

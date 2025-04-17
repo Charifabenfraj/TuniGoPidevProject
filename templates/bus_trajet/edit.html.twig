@@ -1,13 +1,68 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit BusTrajet{% endblock %}
+{% block title %}Modifier un trajet de bus{% endblock %}
 
 {% block body %}
-    <h1>Edit BusTrajet</h1>
+<div class="admin-container">
+    {% include 'admin/sidebar.html.twig' %}
 
-    {{ include('bus_trajet/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Modifier trajet bus</h1>
+            <a href="{{ path('app_bus_trajet_index') }}" class="btn">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+        </div>
 
-    <a href="{{ path('app_bus_trajet_index') }}">back to list</a>
+        {{ form_start(form, {'attr': {'id': 'busTrajetForm'}}) }}
 
-    {{ include('bus_trajet/_delete_form.html.twig') }}
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.stationDepart) }}
+                    {{ form_widget(form.stationDepart, {'attr': {'id':'stationDepart','class':'form-control'}}) }}
+                    <small class="text-danger" id="stationDepartError"></small>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.stationArrivee) }}
+                    {{ form_widget(form.stationArrivee, {'attr': {'id':'stationArrivee','class':'form-control'}}) }}
+                    <small class="text-danger" id="stationArriveeError"></small>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form_label(form.heureDepart) }}
+                        {{ form_widget(form.heureDepart, {'attr': {'id':'heureDepart','class':'form-control','type':'time'}}) }}
+                        <small class="text-danger" id="heureDepartError"></small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form_label(form.heureArrivee) }}
+                        {{ form_widget(form.heureArrivee, {'attr': {'id':'heureArrivee','class':'form-control','type':'time'}}) }}
+                        <small class="text-danger" id="heureArriveeError"></small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.bus) }}
+                {{ form_widget(form.bus, {'attr': {'id':'numeroBus','class':'form-control'}}) }}
+                <small class="text-danger" id="numeroBusError"></small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('app_bus_trajet_index') }}" class="btn btn-secondary mt-3">
+            Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/validation.js') }}"></script>
 {% endblock %}

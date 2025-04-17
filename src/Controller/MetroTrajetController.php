@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\MetroTrajet;
+
 use App\Form\MetroTrajetType;
 use App\Repository\MetroTrajetRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/metro/trajet')]
+#[Route('/metro-trajet')]
 final class MetroTrajetController extends AbstractController
 {
     #[Route(name: 'app_metro_trajet_index', methods: ['GET'])]
@@ -42,13 +43,20 @@ final class MetroTrajetController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_metro_trajet_show', methods: ['GET'])]
-    public function show(MetroTrajet $metroTrajet): Response
-    {
+    
+#[Route('/{id}', name: 'app_metro_trajet_show', methods: ['GET'])]
+    public function show(
+        #[MapEntity(id: 'id')] MetroTrajet $metroTrajet = null
+    ): Response {
+        if (!$metroTrajet) {
+            throw $this->createNotFoundException('Metro trajet not found');
+        }
+
         return $this->render('metro_trajet/show.html.twig', [
             'metro_trajet' => $metroTrajet,
         ]);
     }
+   
 
     #[Route('/{id}/edit', name: 'app_metro_trajet_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, MetroTrajet $metroTrajet, EntityManagerInterface $entityManager): Response

@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/bus/trajet')]
+#[Route('/bus-trajet')] // Préfixe sûr
 final class BusTrajetController extends AbstractController
 {
-    #[Route(name: 'app_bus_trajet_index', methods: ['GET'])]
+    #[Route('/', name: 'app_bus_trajet_index', methods: ['GET'])]
     public function index(BusTrajetRepository $busTrajetRepository): Response
     {
         return $this->render('bus_trajet/index.html.twig', [
@@ -28,21 +28,20 @@ final class BusTrajetController extends AbstractController
         $busTrajet = new BusTrajet();
         $form = $this->createForm(BusTrajetType::class, $busTrajet);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($busTrajet);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_bus_trajet_index', [], Response::HTTP_SEE_OTHER);
+    
+            return $this->redirectToRoute('app_bus_trajet_index');
         }
-
+    
         return $this->render('bus_trajet/new.html.twig', [
-            'bus_trajet' => $busTrajet,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id}', name: 'app_bus_trajet_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_bus_trajet_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(BusTrajet $busTrajet): Response
     {
         return $this->render('bus_trajet/show.html.twig', [
@@ -50,7 +49,7 @@ final class BusTrajetController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_bus_trajet_edit', methods: ['GET', 'POST'])]
+#[Route('/{id}/edit', name: 'app_bus_trajet_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, BusTrajet $busTrajet, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(BusTrajetType::class, $busTrajet);
@@ -59,19 +58,19 @@ final class BusTrajetController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_bus_trajet_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_bus_trajet_index');
         }
 
         return $this->render('bus_trajet/edit.html.twig', [
             'bus_trajet' => $busTrajet,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id}', name: 'app_bus_trajet_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_bus_trajet_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, BusTrajet $busTrajet, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$busTrajet->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $busTrajet->getId(), $request->request->get('_token'))) {
             $entityManager->remove($busTrajet);
             $entityManager->flush();
         }

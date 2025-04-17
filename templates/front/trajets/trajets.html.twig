@@ -1,0 +1,361 @@
+{# templates/front/trajets/trajets.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .trajets-container {
+            background: linear-gradient(135deg,rgb(253, 253, 253) 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+
+        .filter-buttons {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .transport-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .transport-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            position: relative;
+        }
+
+        .transport-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .trajet-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .trajet-item:last-child {
+            border-bottom: none;
+        }
+
+        .trajet-info {
+            flex: 2;
+        }
+
+        .trajet-time {
+            flex: 1;
+            text-align: right;
+        }
+
+        .badge-duration {
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .btn-details {
+            background: #3498db;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-details:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .no-trajets {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+         .btn-reserver {
+        background-color: #3498db !important;
+        border-color: #3498db !important;
+    }
+
+    .btn-reserver:hover {
+        background-color: #2980b9 !important;
+        border-color: #2980b9 !important;
+    }
+    /* Boutons de filtre */
+        .filter-buttons .btn {
+            background: linear-gradient(135deg,#3498db 0%, #e9ecef 100%);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .filter-buttons .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .filter-buttons .btn i {
+            margin-right: 5px;
+            color: #c2185b; /* Mauve-rouge profond */
+            font-size: 1.2rem;
+        }
+        .filter-buttons .btn span {
+            color: #333; /* Texte noir pour lisibilité */
+        }
+        
+    </style>
+{% endblock %}
+
+{% block body %}
+           
+
+<div class="trajets-container">
+    <div class="container">
+        <h1 class="text-center mb-5 display-4" style="color: var(--text-color);">
+            <i class="fas fa-route me-3"></i>Nos Trajets Disponibles
+        </h1>
+
+        <div class="filter-buttons">
+            <button class="btn btn-lg btn-primary mx-2" onclick="showTransport('all')">
+                <i class="fas fa-list"></i> Tous
+            </button>
+            <button class="btn btn-lg btn-primary mx-2" onclick="showTransport('bus')">
+                <i class="fas fa-bus"></i> Bus
+            </button>
+            <button class="btn btn-lg btn-primary mx-2" onclick="showTransport('train')">
+                <i class="fas fa-train"></i> Train
+            </button>
+            <button class="btn btn-lg btn-primary mx-2" onclick="showTransport('metro')">
+                <i class="fas fa-subway"></i> Métro
+            </button>
+        </div>
+
+        {# Section Bus #}
+        <div class="transport-section" id="bus-section">
+            <div class="transport-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-bus transport-icon"></i>Trajets en Bus</h2>
+                </div>
+                <div class="card-body">
+                    {% if bus_trajets is empty %}
+                        <div class="no-trajets">Aucun trajet de bus disponible pour le moment</div>
+                    {% else %}
+                        {% for trajet in bus_trajets %}
+                            <div class="trajet-item">
+                                <div class="trajet-info">
+                                    <h5>{{ trajet.stationDepart }} 
+                                        <i class="fas fa-arrow-right mx-3 text-muted"></i> 
+                                        {{ trajet.stationArrivee }}
+                                    </h5>
+                                    <div class="text-muted">
+                                        <i class="fas fa-clock"></i> Durée : 
+                                        <span class="badge-duration">
+                                            {{ trajet.heureDepart|date('H:i') }} - {{ trajet.heureArrivee|date('H:i') }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="trajet-time">
+                                    <button class="btn-details" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#detailsModal"
+                                            data-trajet="{{ {
+                                                'numero': trajet.bus.numeroBus,
+                                                'type': 'Bus',
+                                                'depart': trajet.stationDepart,
+                                                'arrivee': trajet.stationArrivee,
+                                                'heureDepart': trajet.heureDepart|date('H:i'),
+                                                'heureArrivee': trajet.heureArrivee|date('H:i')
+                                            }|json_encode|e('html_attr') }}">
+                                        Détails <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Section Train #}
+        <div class="transport-section" id="train-section">
+            <div class="transport-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-train transport-icon"></i>Trajets en Train</h2>
+                </div>
+                <div class="card-body">
+                    {% if train_trajets is empty %}
+                        <div class="no-trajets">Aucun trajet de train disponible</div>
+                    {% else %}
+                        {% for trajet in train_trajets %}
+                            <div class="trajet-item">
+                                <div class="trajet-info">
+                                    <h5>{{ trajet.gareDepart }} 
+                                        <i class="fas fa-arrow-right mx-3 text-muted"></i> 
+                                        {{ trajet.gareArrivee }}
+                                    </h5>
+                                    <div class="text-muted">
+                                        <i class="fas fa-clock"></i> Horaires : 
+                                        <span class="badge-duration">
+                                            {{ trajet.heureDepart|date('H:i') }} - {{ trajet.heureArrivee|date('H:i') }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="trajet-time">
+                                    <button class="btn-details" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#detailsModal"
+                                            data-trajet="{{ {
+                                                'numero': trajet.train.numeroTrain,
+                                                'type': 'Train',
+                                                'depart': trajet.gareDepart,
+                                                'arrivee': trajet.gareArrivee,
+                                                'heureDepart': trajet.heureDepart|date('H:i'),
+                                                'heureArrivee': trajet.heureArrivee|date('H:i')
+                                            }|json_encode|e('html_attr') }}">
+                                        Détails <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Section Métro #}
+        <div class="transport-section" id="metro-section">
+            <div class="transport-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-subway transport-icon"></i>Trajets en Métro</h2>
+                </div>
+                <div class="card-body">
+                    {% if metro_trajets is empty %}
+                        <div class="no-trajets">Aucun trajet de métro disponible pour le moment</div>
+                    {% else %}
+                        {% for trajet in metro_trajets %}
+                            <div class="trajet-item">
+                                <div class="trajet-info">
+                                    <h5>{{ trajet.gareDepart }} 
+                                        <i class="fas fa-arrow-right mx-3 text-muted"></i> 
+                                        {{ trajet.gareArrivee }}
+                                    </h5>
+                                    <div class="text-muted">
+                                        <i class="fas fa-clock"></i> Durée : 
+                                        <span class="badge-duration">
+                                            {{ trajet.heureDepart|date('H:i') }} - {{ trajet.heureArrivee|date('H:i') }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="trajet-time">
+                                    <button class="btn-details" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#detailsModal"
+                                            data-trajet="{{ {
+                                                'type': 'Métro',
+                                                'depart': trajet.gareDepart,
+                                                'arrivee': trajet.gareArrivee,
+                                                'heureDepart': trajet.heureDepart|date('H:i'),
+                                                'heureArrivee': trajet.heureArrivee|date('H:i')
+                                            }|json_encode|e('html_attr') }}">
+                                        Détails <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Modal #}
+        <div class="modal fade" id="detailsModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Détails du trajet</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <dl>
+                            <dt>Numéro:</dt>
+                            <dd id="modal-numero"></dd>
+                            
+                            <dt>Type:</dt>
+                            <dd id="modal-type"></dd>
+                            
+                            <dt>Itinéraire:</dt>
+                            <dd id="modal-itineraire"></dd>
+                            
+                            <dt>Horaires:</dt>
+                            <dd id="modal-horaires"></dd>
+                        </dl>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/front" class="btn btn-reserver text-white">
+                            Réserver maintenant
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+function showTransport(type) {
+    const sections = document.querySelectorAll('.transport-section');
+    sections.forEach(section => {
+        if(type === 'all') {
+            section.style.display = 'block';
+        } else {
+            section.style.display = section.id === `${type}-section` ? 'block' : 'none';
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = new bootstrap.Modal('#detailsModal');
+    
+    document.querySelectorAll('.btn-details').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const data = JSON.parse(btn.dataset.trajet);
+            
+            document.getElementById('modal-numero').textContent = data.numero;
+            document.getElementById('modal-type').textContent = data.type;
+            document.getElementById('modal-itineraire').textContent = 
+                `${data.depart} → ${data.arrivee}`;
+            document.getElementById('modal-horaires').textContent = 
+                `${data.heureDepart} - ${data.heureArrivee}`;
+        });
+    });
+});
+
+</script>
+{% endblock %}
