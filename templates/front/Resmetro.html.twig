@@ -1,0 +1,134 @@
+{% extends 'front/basefront.html.twig' %}
+
+{% block title %}Service - TuniGo{% endblock %}
+
+{% block body %}
+<div class="header-carousel">
+    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{{ asset('aassetsFront/img/metro.jpg') }}" class="img-fluid w-100" alt="Métro">
+                <div class="carousel-caption">
+                    <div class="container py-4">
+                        <div class="row g-5">
+                            <div class="col-lg-6">
+                                <div class="bg-secondary rounded p-5">
+                                    <h4 class="text-white mb-4">RÉSERVATION MÉTRO</h4>
+                                    
+                                    {# Messages flash #}
+                                    {% for message in app.flashes('success') %}
+                                        <div class="alert alert-success">{{ message }}</div>
+                                    {% endfor %}
+                                    {% for message in app.flashes('error') %}
+                                        <div class="alert alert-danger">{{ message }}</div>
+                                    {% endfor %}
+                                    {% for message in app.flashes('warning') %}
+                                        <div class="alert alert-warning">{{ message }}</div>
+                                    {% endfor %}
+
+                                    {# Formulaire #}
+                                    <form method="POST" action="{{ path('reservation_metro_process') }}">
+                                        <input type="hidden" name="type" value="metro">
+                                        
+                                        {# Sélection du métro #}
+                                        <div class="mb-3">
+    <label class="form-label text-white">Ligne de métro</label>
+    <select class="form-select" name="moyen" required>
+        <option value="" selected disabled>-- Sélectionnez une ligne --</option>
+        {% for id, numero in metros %}
+            <option value="{{ id }}">Ligne {{ numero }}</option>
+        {% else %}
+            <option value="" disabled>Aucune ligne disponible</option>
+        {% endfor %}
+    </select>
+    
+    {% if available_metros is not empty %}
+        <small class="text-white-50 mt-1 d-block">
+            <i class="fas fa-info-circle me-1"></i>
+            Lignes disponibles: {{ available_metros|join(', ') }}
+        </small>
+    {% endif %}
+</div>
+                                        
+                                        {# Utilisateur #}
+                                        <div class="mb-3">
+                                            <div class="input-group">
+                                                <div class="d-flex align-items-center bg-light text-body rounded-start p-2">
+                                                    <span class="fas fa-user"></span>
+                                                    <span class="ms-1">Utilisateur</span>
+                                                </div>
+                                                <input class="form-control" type="text" 
+                                                       value="{{ app.user ? app.user.prenomUtilisateur ~ ' ' ~ app.user.nomUtilisateur : 'Non connecté' }}" 
+                                                       readonly>
+                                            </div>
+                                        </div>
+                                        
+                                        {# Date de réservation #}
+                                        <div class="mb-3">
+                                            <label class="form-label text-white">Date de réservation</label>
+                                            <input type="date" class="form-control" name="date" 
+                                                   min="{{ 'now'|date('Y-m-d') }}" required>
+                                        </div>
+                                        
+                                        {# Moyen de paiement #}
+                                        <div class="mb-3">
+                                            <label class="form-label text-white">Moyen de paiement</label>
+                                            <select class="form-select" name="paiement" required>
+                                                <option value="" selected disabled>Sélectionnez un moyen</option>
+                                                <option value="Carte">Carte bancaire</option>
+                                                <option value="Espèces">Espèces</option>
+                                            </select>
+                                        </div>
+                                        
+                                        {# Bouton de soumission #}
+                                        <div class="d-grid gap-2 mt-4">
+                                            <button type="submit" class="btn btn-primary py-2">
+                                                <i class="fas fa-ticket-alt me-2"></i> Réserver
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6 d-none d-lg-flex">
+                                <div class="text-start">
+                                    <h1 class="display-5 text-white">Découvrez Tunis en métro</h1>
+                                    <p class="text-white">Voyagez facilement et rapidement à travers la capitale</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validation de la date
+            const dateInput = document.querySelector('input[name="date"]');
+            if (dateInput) {
+                const today = new Date();
+                const dd = String(today.getDate()).padStart(2, '0');
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const yyyy = today.getFullYear();
+                dateInput.min = yyyy + '-' + mm + '-' + dd;
+            }
+            
+            // Désactiver les options indisponibles
+            const metroSelect = document.querySelector('select[name="moyen"]');
+            if (metroSelect) {
+                Array.from(metroSelect.options).forEach(option => {
+                    if (option.text.includes('(Indisponible)')) {
+                        option.disabled = true;
+                        option.style.color = '#6c757d';
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

@@ -4,9 +4,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ReservationRepository;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
@@ -16,11 +14,7 @@ class Reservation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-<<<<<<< HEAD
-    private ?int $idRes ; 
-=======
     private ?int $idRes = null;
->>>>>>> 5c3a1b85154cb33b4a186add19a9da1cc3c98b5d
 
     public function getIdRes(): ?int
     {
@@ -34,6 +28,7 @@ class Reservation
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+  
     private ?string $nomUser = null;
 
     public function getNomUser(): ?string
@@ -48,6 +43,7 @@ class Reservation
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "Le moyen de transport est obligatoire.")]
     private ?string $moyen = null;
 
     public function getMoyen(): ?string
@@ -62,6 +58,11 @@ class Reservation
     }
 
     #[ORM\Column(type: 'date', nullable: false)]
+    #[Assert\NotNull(message: "La date de réservation est obligatoire.")]
+    #[Assert\Type(
+        type: \DateTimeInterface::class,
+        message: "Format de date invalide."
+    )]
     private ?\DateTimeInterface $dateRes = null;
 
     public function getDateRes(): ?\DateTimeInterface
@@ -76,6 +77,11 @@ class Reservation
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "Le moyen de paiement est obligatoire.")]
+    #[Assert\Choice(
+        choices: ['Carte', 'Espèce', 'PayPal'],
+        message: "Choisissez un moyen de paiement valide (Carte, Espèce)."
+    )]
     private ?string $moyenPaiement = null;
 
     public function getMoyenPaiement(): ?string
@@ -90,6 +96,7 @@ class Reservation
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+   
     private ?string $confirmationCode = null;
 
     public function getConfirmationCode(): ?string
@@ -102,5 +109,4 @@ class Reservation
         $this->confirmationCode = $confirmationCode;
         return $this;
     }
-
 }

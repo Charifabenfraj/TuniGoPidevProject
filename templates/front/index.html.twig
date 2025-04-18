@@ -1,0 +1,54 @@
+{% extends 'front/basefront.html.twig' %}
+
+{% block title %} Service - TuniGo {% endblock %}
+
+
+{% block body %}
+<div class="header-carousel">
+        <div id="carouselId" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+            <ol class="carousel-indicators">
+                <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active" aria-current="true" aria-label="First slide"></li>
+                <li data-bs-target="#carouselId" data-bs-slide-to="1" aria-label="Second slide"></li>
+            </ol>
+            <div class="carousel-inner" role="listbox">
+               
+                <!-- Deuxième slide (si nécessaire, tu peux ajouter plus de slides ici) -->
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+   
+
+    
+
+
+{% block javascripts %}
+    <script>
+      
+function updateNumeroOptions() {
+    const type = document.getElementById("typeMoyenTransport").value;
+    const numeroSelect = document.getElementById("moyenComboBox");
+
+    // Vider les options actuelles
+    numeroSelect.innerHTML = '<option selected disabled>Sélectionnez un numéro</option>';
+
+    // Appeler l'API pour récupérer les numéros selon le type
+    fetch(`/api/numeros?type=${type}`)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(numero => {
+                const option = document.createElement("option");
+                option.value = numero;
+                option.textContent = numero;
+                numeroSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des numéros :', error);
+        });
+}
+</script>
+
+   
+{% endblock %}

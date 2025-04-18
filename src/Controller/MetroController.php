@@ -81,4 +81,21 @@ final class MetroController extends AbstractController
 
         return $this->redirectToRoute('app_metro_index', [], Response::HTTP_SEE_OTHER);
     }
+    
+#[Route('/reservation/metro', name: 'reservation_metro')]
+public function showReservationForm(MetroRepository $metroRepository): Response
+{
+    // Récupération des données
+    $metros = $metroRepository->findAllMetrosForForm();
+    $availableNumbers = $metroRepository->findAllMetroNumbers();
+
+    if (empty($metros)) {
+        $this->addFlash('warning', 'Aucun métro disponible actuellement');
+    }
+
+    return $this->render('front/Resmetro.html.twig', [
+        'metros' => $metros,
+        'available_metros' => $availableNumbers
+    ]);
+}
 }

@@ -14,8 +14,14 @@ class Metro
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer',name: 'idMetro')]
+    #[ORM\Column(type: 'integer', name: 'idMetro')]
     private ?int $idMetro = null;
+
+    #[ORM\Column(type: 'string', name: 'numerometro', nullable: false)]
+    private ?string $numeroMetro = null;
+
+    #[ORM\Column(type: 'integer', name: 'idTrajetMetro', nullable: true)]
+    private ?int $idTrajetMetro = null;
 
     public function getIdMetro(): ?int
     {
@@ -28,9 +34,6 @@ class Metro
         return $this;
     }
 
-    #[ORM\Column(type: 'string',name: 'numerometro', nullable: false)]
-    private ?string $numeroMetro = null;
-
     public function getNumeroMetro(): ?string
     {
         return $this->numeroMetro;
@@ -41,9 +44,6 @@ class Metro
         $this->numeroMetro = $numeroMetro;
         return $this;
     }
-
-    #[ORM\Column(type: 'integer',name: 'idTrajetMetro', nullable: true)]
-    private ?int $idTrajetMetro = null;
 
     public function getIdTrajetMetro(): ?int
     {
@@ -56,4 +56,9 @@ class Metro
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->numeroMetro ?? 'Metro';
+    }
 }
+

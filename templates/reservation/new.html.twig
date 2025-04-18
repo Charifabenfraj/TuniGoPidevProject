@@ -1,11 +1,84 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Reservation{% endblock %}
+{% block title %}Réservations - TuniGo Admin{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ asset('styles/admin.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Reservation</h1>
+<div class="admin-container">
+    <!-- Sidebar -->
+    {% include 'admin/sidebar.html.twig' %}
 
-    {{ include('reservation/_form.html.twig') }}
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Gestion des Réservations</h1>
+            <div class="page-actions">
+                <a href="{{ path('app_reservation_new') }}" class="btn-admin btn-primary-admin">
+                    <i class="fas fa-plus"></i> Nouvelle Réservation
+                </a>
+                <a href="{{ path('app_reservation_index') }}" class="btn-admin btn-secondary-admin">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
 
-    <a href="{{ path('app_reservation_index') }}">back to list</a>
+        <!-- Notifications -->
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <!-- Form for new reservation -->
+        <div class="form-container">
+            <h2>Créer une nouvelle réservation</h2>
+
+            <!-- Form with error handling -->
+            {{ form_start(form) }}
+
+            <!-- Display form-wide errors -->
+            {% for error in form.vars.errors %}
+                <div class="alert alert-danger">
+                    {{ error.message }}
+                </div>
+            {% endfor %}
+
+
+            <div class="form-group">
+                {{ form_label(form.moyen) }}
+                {{ form_widget(form.moyen, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.moyen) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.dateRes) }}
+                {{ form_widget(form.dateRes, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.dateRes) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.moyenPaiement) }}
+                {{ form_widget(form.moyenPaiement, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.moyenPaiement) }}
+            </div>
+
+            
+            <button type="submit" class="btn-admin btn-success-admin">Enregistrer</button>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
 {% endblock %}

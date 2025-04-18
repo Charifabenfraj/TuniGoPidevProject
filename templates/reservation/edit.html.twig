@@ -1,13 +1,93 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Reservation{% endblock %}
+{% block title %}Éditer la Réservation{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ asset('styles/admin.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <style>
+
+    .alert {
+    padding: 10px 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.alert-success {
+    background-color: #28a745; /* Couleur verte pour le succès */
+    animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+        .btn-admin {
+            background-color: #dc3545; /* Rouge pour les boutons */
+            color: white;
+        }
+
+        .btn-admin:hover {
+            background-color: #c82333; /* Rouge plus foncé au survol */
+        }
+
+        .page-title {
+            color: #dc3545; /* Titre en rouge */
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Reservation</h1>
+<div class="admin-container">
+    <!-- Sidebar -->
+    {% include 'admin/sidebar.html.twig' %}
 
-    {{ include('reservation/_form.html.twig', {'button_label': 'Update'}) }}
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Éditer la Réservation</h1>
+            <div class="page-actions">
+                <a href="{{ path('app_reservation_index') }}" class="btn-admin btn-secondary-admin">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+        </div>
 
-    <a href="{{ path('app_reservation_index') }}">back to list</a>
+        <!-- Reservation Edit Form -->
+        <div class="form-container">
+            {{ include('reservation/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+            {% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+        </div>
 
-    {{ include('reservation/_delete_form.html.twig') }}
+        <!-- Delete Form -->
+        <div class="delete-container">
+            {{ include('reservation/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
 {% endblock %}

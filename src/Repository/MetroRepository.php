@@ -1,14 +1,10 @@
 <?php
-
 namespace App\Repository;
 
-use App\Entity\Metro;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Metro;
 
-/**
- * @extends ServiceEntityRepository<Metro>
- */
 class MetroRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +12,38 @@ class MetroRepository extends ServiceEntityRepository
         parent::__construct($registry, Metro::class);
     }
 
-    //    /**
-    //     * @return Metro[] Returns an array of Metro objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Récupère tous les numéros de métro disponibles
+     * @return array Liste des numéros de métro
+     */
+    public function findAllMetroNumbers(): array
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m.numeroMetro')
+            ->where('m.numeroMetro IS NOT NULL')
+            ->orderBy('m.numeroMetro', 'ASC')
+            ->getQuery()
+            ->getSingleColumnResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Metro
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Récupère tous les métros avec leurs IDs et numéros
+     * @return array Liste des métros formatés [id => numeroMetro]
+     */
+    public function findAllMetrosForForm(): array
+    {
+        $results = $this->createQueryBuilder('m')
+            ->select('m.idMetro', 'm.numeroMetro')
+            ->where('m.numeroMetro IS NOT NULL')
+            ->orderBy('m.numeroMetro', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $metros = [];
+        foreach ($results as $result) {
+            $metros[$result['idMetro']] = $result['numeroMetro'];
+        }
+
+        return $metros;
+    }
 }
