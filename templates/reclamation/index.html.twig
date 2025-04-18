@@ -68,19 +68,42 @@
                                 <td>{{ reclamation.idReclamation }}</td>
                                 <td>{{ reclamation.typeReclamation }}</td>
                                 <td>{{ reclamation.descriptionReclamation }}</td>
-                                <td>{{ reclamation.statutReclamation }}</td>
+                                           <td>
+    <span style="
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: {% if reclamation.statutReclamation == 'Résolue' %}#155724
+               {% elseif reclamation.statutReclamation == 'En Attente' %}#856404
+               {% else %}#383d41{% endif %};
+        background-color: {% if reclamation.statutReclamation == 'Résolue' %}#d4edda
+                         {% elseif reclamation.statutReclamation == 'En Attente' %}#fff3cd
+                         {% else %}#e2e3e5{% endif %};
+        border: 1px solid 
+                {% if reclamation.statutReclamation == 'Résolue' %}#c3e6cb
+                {% elseif reclamation.statutReclamation == 'En Attente' %}#ffeeba
+                {% else %}#d6d8db{% endif %};
+    ">
+        {{reclamation.statutReclamation }}
+    </span>
+</td>
                                 <td data-sort="{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}">
                                     {{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}
                                 </td>
                                 <td>{{ reclamation.nomUtilisateur }}</td>
                                 <td>{{ reclamation.prenomUtilisateur }}</td>
-                                <td>
-                                    {% if reclamation.image %}
-                                        <img src="{{ asset('uploads/images/' ~ reclamation.image) }}" alt="Image de réclamation" class="img-thumbnail" style="width: 100px;">
-                                    {% else %}
-                                        <span>Aucune image</span>
-                                    {% endif %}
-                                </td>
+                               <td class="info-value">
+        {% if reclamation.image %}
+            <img src="{{ asset('uploads/images/' ~ reclamation.image) }}"
+                 alt="Image Réclamation"
+                 style="max-width: 150px; height: auto; border-radius: 10px; cursor: pointer;"
+                 onclick="openModal('{{ asset('uploads/images/' ~ reclamation.image) }}')">
+        {% else %}
+            <span>Aucune image fournie.</span>
+        {% endif %}
+    </td>
                                 <td>
                                     <a href="{{ path('app_reclamation_show', {'idReclamation': reclamation.idReclamation}) }}" class="btn-action btn-view" title="Voir">
                                         <i class="fas fa-eye"></i>

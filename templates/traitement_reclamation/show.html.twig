@@ -3,32 +3,59 @@
 {% block title %}TraitementReclamation{% endblock %}
 
 {% block body %}
-    <h1>TraitementReclamation</h1>
+<div class="modal fade" id="traitementModal" tabindex="-1" aria-labelledby="traitementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="traitementModalLabel">Détails du Traitement #{{ traitement.id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td>{{ traitement.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Statut</th>
+                            <td>
+                                <span class="badge bg-{{ traitement.statutTraitement == 'Résolu' ? 'success' : 
+                                    (traitement.statutTraitement == 'En cours' ? 'warning' : 'secondary') }}">
+                                    {{ traitement.statutTraitement }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td>{{ traitement.dateTraitement ? traitement.dateTraitement|date('d/m/Y H:i') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ traitement.traitementDescription }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ traitement_reclamation.id }}</td>
-            </tr>
-            <tr>
-                <th>Statut_traitement</th>
-                <td>{{ traitement_reclamation.statutTraitement }}</td>
-            </tr>
-            <tr>
-                <th>Date_traitement</th>
-                <td>{{ traitement_reclamation.dateTraitement ? traitement_reclamation.dateTraitement|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Traitement_description</th>
-                <td>{{ traitement_reclamation.traitementDescription }}</td>
-            </tr>
-        </tbody>
-    </table>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <a href="{{ path('app_traitement_reclamation_index') }}">back to list</a>
-
-    <a href="{{ path('app_traitement_reclamation_edit', {'id': traitement_reclamation.id}) }}">edit</a>
-
-    {{ include('traitement_reclamation/_delete_form.html.twig') }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var myModal = new bootstrap.Modal(document.getElementById('traitementModal'));
+    myModal.show();
+    
+    // Fermer la modal quand on clique sur le bouton "back to list"
+    document.getElementById('traitementModal').addEventListener('hidden.bs.modal', function () {
+        window.location.href = "{{ path('app_traitement_reclamation_index') }}";
+    });
+});
+</script>
 {% endblock %}

@@ -7,13 +7,38 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="{{ asset('styles/admin.css') }}" rel="stylesheet">
+    <style>
+        /* Correction du fond bleu */
+        .admin-container {
+            background-color: #f8f9fa; /* Fond gris clair */
+            min-height: 100vh;
+        }
+        .main-content {
+            background: white; /* Fond blanc pour la zone de contenu */
+            margin-left: 250px; /* Ajuster selon la largeur de votre sidebar */
+            padding: 20px;
+        }
+        .card-admin {
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            background: white;
+        }
+        .card-admin-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+        }
+        .card-admin-body {
+            padding: 20px;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
 <div class="admin-container">
     <!-- Sidebar -->
-       {% include 'admin/sidebar.html.twig' %}
-
+    {% include 'admin/sidebar.html.twig' %}
     
     <!-- Main Content -->
     <div class="main-content">
@@ -24,15 +49,13 @@
             </div>
         </div>
         
-        <!-- Empty content area (removed statistics and other content) -->
         <div class="card-admin">
             <div class="card-admin-header">
-                <h5 class="card-admin-title">Tableau de bord</h5>
+                <h5 class="card-admin-title">Statistiques des Réclamations</h5>
             </div>
             <div class="card-admin-body">
- <div class="card-admin-body">
-    {% include 'admin/_reclam_stats_component.html.twig' %}
-</div>
+                {% include 'admin/_reclam_stats_component.html.twig' %}
+            </div>
         </div>
     </div>
 </div>
@@ -40,4 +63,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-{% endblock %} 
+    <script>
+        // Scripts spécifiques à l'admin peuvent être ajoutés ici
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Dashboard admin chargé');
+        });
+    </script>
+{% endblock %}

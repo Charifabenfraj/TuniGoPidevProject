@@ -14,21 +14,21 @@ class ReservationParking
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer', name: "idReservation")]
+    #[ORM\Column(type: 'integer', name: "id_reservation")]
     private ?int $idReservation = null;
 
-    #[ORM\Column(type: 'datetime', name: "dateReservation")]
+    #[ORM\Column(type: 'datetime', name: "date_reservation")]
     #[Assert\NotBlank(message: "La date de réservation est requise.")]
     #[Assert\Type(\DateTimeInterface::class)]
     private ?\DateTimeInterface $dateReservation = null;
 
     #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
-    #[ORM\JoinColumn(name: "idUtilisateur", referencedColumnName: "idUtilisateur", nullable: false)]
+    #[ORM\JoinColumn(name: "id_utilisateur", referencedColumnName: "idUtilisateur", nullable: false)]
     #[Assert\NotNull(message: "L'utilisateur est requis.")]
     private ?Utilisateur $utilisateur = null;
 
     #[ORM\ManyToOne(targetEntity: Parking::class)]
-    #[ORM\JoinColumn(name: "idParking", referencedColumnName: "idParking", nullable: false)]
+    #[ORM\JoinColumn(name: "id_parking", referencedColumnName: "idParking", nullable: false)]
     #[Assert\NotNull(message: "Le parking est requis.")]
     private ?Parking $parking = null;
 

@@ -1,39 +1,212 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}TraitementReclamation index{% endblock %}
+{% block title %}Gestion des Traitements - TuniGo{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="{{ asset('styles/admin.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-    <h1>TraitementReclamation index</h1>
+<div class="admin-container">
+    <!-- Sidebar -->
+    {% include 'admin/sidebar.html.twig' %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Statut_traitement</th>
-                <th>Date_traitement</th>
-                <th>Traitement_description</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for traitement_reclamation in traitement_reclamations %}
-            <tr>
-                <td>{{ traitement_reclamation.id }}</td>
-                <td>{{ traitement_reclamation.statutTraitement }}</td>
-                <td>{{ traitement_reclamation.dateTraitement ? traitement_reclamation.dateTraitement|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ traitement_reclamation.traitementDescription }}</td>
-                <td>
-                    <a href="{{ path('app_traitement_reclamation_show', {'id': traitement_reclamation.id}) }}">show</a>
-                    <a href="{{ path('app_traitement_reclamation_edit', {'id': traitement_reclamation.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Gestion des Traitements</h1>
+            
+        </div>
+        
+        <div class="card-admin">
+            <div class="card-admin-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h5 class="card-admin-title" style="margin: 0;">Liste des Traitements</h5>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <input type="text" id="searchInput" placeholder="Rechercher par statut, description..." 
+                           class="form-control form-control-sm" style="width: 500px;" />
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-admin btn-outline-admin btn-sm-admin" onclick="sortTableByDate(true)">
+                            <i class="fas fa-sort-amount-down"></i> Plus récent
+                        </button>
+                        <button class="btn-admin btn-outline-admin btn-sm-admin" onclick="sortTableByDate(false)">
+                            <i class="fas fa-sort-amount-up"></i> Plus ancien
+                        </button>
+                        <button class="btn-admin btn-outline-admin btn-sm-admin" onclick="exportToExcel()">
+                            <i class="fas fa-file-excel"></i> Exporter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-admin-body">
+                <div class="table-responsive">
+                    <table class="table-admin" id="traitementTable">
+                        <thead>
+                            <tr>
+                                <th>#ID</th>
+                                <th>Réclamation associée</th>
+                                <th>Statut</th>
+                                <th>Description</th>
+                                <th>Date de traitement</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for traitement in traitement_reclamations %}
+                            <tr class="traitement-row">
+                                <td>{{ traitement.id }}</td>
+                                <td>
+                                    {{ traitement.reclamation.idReclamation }} - 
+                                    {{ traitement.reclamation.typeReclamation }}
+                                </td>
+<td>
+    <span style="
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: {% if traitement.statutTraitement == 'Résolue' %}#155724
+               {% elseif traitement.statutTraitement == 'En attente' %}#856404
+               {% else %}#383d41{% endif %};
+        background-color: {% if traitement.statutTraitement == 'Résolue' %}#d4edda
+                         {% elseif traitement.statutTraitement == 'En attente' %}#fff3cd
+                         {% else %}#e2e3e5{% endif %};
+        border: 1px solid 
+                {% if traitement.statutTraitement == 'Résolue' %}#c3e6cb
+                {% elseif traitement.statutTraitement == 'En attente' %}#ffeeba
+                {% else %}#d6d8db{% endif %};
+    ">
+        {{ traitement.statutTraitement }}
+    </span>
+</td>
 
-    <a href="{{ path('app_traitement_reclamation_new') }}">Create new</a>
+                                <td>{{ traitement.traitementDescription|slice(0, 50) }}{% if traitement.traitementDescription|length > 50 %}...{% endif %}</td>
+                                <td data-sort="{{ traitement.dateTraitement ? traitement.dateTraitement|date('Y-m-d H:i:s') : '' }}">
+                                    {{ traitement.dateTraitement ? traitement.dateTraitement|date('d/m/Y H:i') : '' }}
+                                </td>
+                                <td>
+<button class="btn-action btn-view" title="Voir" onclick="showTraitementDetails({{ traitement.id }})">
+    <i class="fas fa-eye"></i>
+</button>
+
+                                    <button class="btn-action btn-delete" title="Supprimer" 
+                                           onclick="if(confirm('Êtes-vous sûr de vouloir supprimer ce traitement?')) { 
+                                               document.getElementById('delete-form-{{ traitement.id }}').submit(); 
+                                           }">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <form id="delete-form-{{ traitement.id }}" action="{{ path('app_traitement_reclamation_delete', {'id': traitement.id}) }}" method="post" style="display: none;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ traitement.id) }}">
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucun traitement trouvé</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de détails -->
+<div class="modal fade" id="traitementModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Détails du Traitement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- Contenu chargé dynamiquement -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script>
+// Dans votre block javascripts
+function showTraitementDetails(id) {
+    fetch('/traitementreclamation/' + id + '/modal')  // Notez le changement d'URL ici
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('modalContent').innerHTML = html;
+            const modal = new bootstrap.Modal(document.getElementById('traitementModal'));
+            modal.show();
+        });
+}
+
+        // Fonctionnalité de recherche
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                let searchValue = e.target.value.toLowerCase();
+                let rows = document.querySelectorAll('.traitement-row');
+
+                rows.forEach(row => {
+                    let shouldShow = false;
+                    for (let i = 1; i < row.cells.length - 1; i++) {
+                        if (row.cells[i].textContent.toLowerCase().includes(searchValue)) {
+                            shouldShow = true;
+                            break;
+                        }
+                    }
+                    row.style.display = shouldShow ? '' : 'none';
+                });
+            });
+        });
+
+        // Tri par date
+        function sortTableByDate(isDescending) {
+            let tbody = document.querySelector('#traitementTable tbody');
+            let rows = Array.from(tbody.querySelectorAll('tr.traitement-row'));
+            
+            rows.sort((a, b) => {
+                let dateA = a.cells[4].getAttribute('data-sort');
+                let dateB = b.cells[4].getAttribute('data-sort');
+                
+                if (!dateA && !dateB) return 0;
+                if (!dateA) return 1;
+                if (!dateB) return -1;
+                
+                return isDescending ? 
+                    new Date(dateB) - new Date(dateA) : 
+                    new Date(dateA) - new Date(dateB);
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Export Excel
+        function exportToExcel() {
+            const table = document.getElementById('traitementTable');
+            const clone = table.cloneNode(true);
+            
+            const actionCells = clone.querySelectorAll('td:nth-last-child(1)');
+            actionCells.forEach(cell => {
+                cell.innerHTML = '';
+            });
+            
+            const workbook = XLSX.utils.table_to_book(clone, {sheet: "Traitements"});
+            XLSX.writeFile(workbook, 'traitements_reclamations.xlsx');
+        }
+    </script>
 {% endblock %}

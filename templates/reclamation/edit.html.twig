@@ -1,13 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Reclamation{% endblock %}
+{% block title %}Modifier une réclamation{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Reclamation</h1>
+<div class="container mt-5">
+    {% include 'admin/sidebar.html.twig' %}
 
-    {{ include('reclamation/_form.html.twig', {'button_label': 'Update'}) }}
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Modifier la réclamation</h1>
+            <div class="page-actions">
+                <a href="{{ path('app_reclamation_index') }}" class="btn-admin btn-primary-admin">Retour à la liste</a>
+            </div>
+        </div>
 
-    <a href="{{ path('app_reclamation_index') }}">back to list</a>
+        <!-- Formulaire centré et plus large -->
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Formulaire -->
+                    <form method="post">
+                        {{ form_start(form) }}
 
-    {{ include('reclamation/_delete_form.html.twig') }}
+                        <div class="mb-3">
+                            <label for="nomUtilisateur" class="form-label">Nom de l'utilisateur</label>
+                            {{ form_widget(form.nom_utilisateur, {'attr': {'class': 'form-control', 'id': 'nomUtilisateur'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="prenomUtilisateur" class="form-label">Prénom de l'utilisateur</label>
+                            {{ form_widget(form.prenom_utilisateur, {'attr': {'class': 'form-control', 'id': 'prenomUtilisateur'}}) }}
+                        </div>
+
+                        <!-- Type de réclamation avec <select> -->
+                        <div class="mb-3">
+                            <label for="typeReclamation" class="form-label">Type de réclamation</label>
+                            {{ form_widget(form.typeReclamation, {'attr': {'class': 'form-select', 'id': 'typeReclamation'}}) }}
+                        </div>
+
+                        <!-- Description de la réclamation avec <div class="form-floating"> -->
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.descriptionReclamation, {'attr': {'class': 'form-control', 'id': 'floatingTextarea2', 'style': 'height: 100px'}}) }}
+                            <label for="floatingTextarea2">Description de la réclamation</label>
+                        </div>
+
+<div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id="statusSwitch" {% if reclamation.statutReclamation %}checked{% endif %} disabled>
+    <label class="form-check-label" for="statusSwitch">
+        {% if reclamation.statutReclamation %}
+            Résolue
+        {% else %}
+            En Attente
+        {% endif %}
+    </label>
+</div>
+
+
+                        <button type="submit" class="btn btn-primary">{{ button_label|default('Mettre à jour') }}</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

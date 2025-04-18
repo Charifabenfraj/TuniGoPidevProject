@@ -20,6 +20,7 @@ class ReclamationType extends AbstractType
         $builder
             ->add('nom_utilisateur', TextType::class, [
                 'label' => "Nom de l'utilisateur",
+
             ])
             ->add('prenom_utilisateur', TextType::class, [
                 'label' => "Prénom de l'utilisateur",
@@ -43,26 +44,16 @@ class ReclamationType extends AbstractType
                 'required' => false,
                 'attr' => ['accept' => 'image/*'],
             ]);
-*/
-            ->add('image', FileType::class, [
-                'label' => 'Télécharger une image',
-                'mapped' => false,
-                'required' => false,
-                'attr' => ['accept' => 'image/*'], // pour le navigateur (filtrage côté client)
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2M', // taille max
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                            'image/jpg',
-                            'image/gif',
-                            'image/webp',
-                        ],
-                        'mimeTypesMessage' => 'Veuillez uploader une image valide (jpg, png, gif, webp)',
-                    ])
-                ],
-            ]);
+*/->add('image', FileType::class, [
+    'label' => 'Image (facultatif)',
+    'required' => false,
+    'constraints' => [
+        new File([
+            'maxSize' => '2M',
+            'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
+        ])
+    ]
+]);   
     }
 
     public function configureOptions(OptionsResolver $resolver)

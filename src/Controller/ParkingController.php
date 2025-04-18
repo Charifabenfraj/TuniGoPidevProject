@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/parking')]
 final class ParkingController extends AbstractController
 {
+    /*
     #[Route(name: 'app_parking_index', methods: ['GET'])]
     public function index(ParkingRepository $parkingRepository, Request $request, PaginatorInterface $paginator): Response
     {
@@ -32,8 +33,29 @@ final class ParkingController extends AbstractController
             'parkings' => $parkings,
         ]);
     }
-    
+    */
 
+    #[Route(name: 'app_parking_index', methods: ['GET'])]
+
+    public function index(Request $request, ParkingRepository $parkingRepository): Response
+    {
+        $parkings = $parkingRepository->findAll();
+        
+        // Configuration de la pagination manuelle
+        $page = $request->query->getInt('page', 1); // Page courante (1 par défaut)
+        $limit = 10; // Nombre d'éléments par page
+        $offset = ($page - 1) * $limit;
+        $total = count($parkings);
+        $paginatedParkings = array_slice($parkings, $offset, $limit);
+        $maxPages = ceil($total / $limit);
+    
+        return $this->render('parking/index.html.twig', [
+            'parkings' => $paginatedParkings,
+            'current_page' => $page,
+            'max_pages' => $maxPages,
+            'total_items' => $total
+        ]);
+    }
     #[Route('/new', name: 'app_parking_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

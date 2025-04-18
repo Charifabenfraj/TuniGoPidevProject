@@ -12,6 +12,13 @@
 <div class="admin-container">
     <!-- Sidebar -->
     {% include 'admin/sidebar.html.twig' %}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="toast {{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
 
     <!-- Main Content -->
     <div class="main-content">

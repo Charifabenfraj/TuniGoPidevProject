@@ -33,10 +33,10 @@ class Reclamation
 
     #[ORM\Column(type: 'string',name: 'typeReclamation', nullable: false)]
     #[Assert\NotBlank(message: "Le type de réclamation est obligatoire")]
-    #[Assert\Choice(
+   /* #[Assert\Choice(
         choices: ['Service', 'Disponibilité', 'Paiement'],
         message: "Le type doit être 'Service', 'Disponibilité' ou 'Paiement'"
-    )]
+    )]*/
     private ?string $typeReclamation = null;
 
     public function getTypeReclamation(): ?string
@@ -54,7 +54,7 @@ class Reclamation
     #[Assert\NotBlank(message: "La description est obligatoire")]
     #[Assert\Length(
         min: 10,
-        max: 100,
+        max: 300,
         minMessage: "La description doit contenir au moins {{ limit }} caractères",
         maxMessage: "La description ne peut pas dépasser {{ limit }} caractères"
     )]
@@ -76,19 +76,21 @@ class Reclamation
         choices: ['En Attente', 'Résolue'],
         message: "Le statut Reclamation doit être  'En Attente' ou 'Résolue'"
     )]
-    private ?string $statutReclamation = null;
+    private ?string $statutReclamation = 'En Attente';
 
     public function getStatutReclamation(): ?string
     {
         
         return $this->statutReclamation;
+
     }
 
     public function setStatutReclamation(?string $statutReclamation): self
     {
         // On assigne la valeur du statut directement, en fonction du champ envoyé
-        $this->statutReclamation = $statutReclamation;
-    
+        $this->statutReclamation = 'En Attente'; // Double assurance
+
+
         return $this;
     }
     
@@ -111,7 +113,7 @@ class Reclamation
      */
     #[ORM\Column(type: 'datetime', name: 'dateReclamation', nullable: false)]
 
-    private ?\DateTimeInterface $dateReclamation = null;
+    private ?\DateTimeInterface $dateReclamation ;
 
     public function getDateReclamation(): ?\DateTimeInterface
     {

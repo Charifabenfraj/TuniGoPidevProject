@@ -29,15 +29,15 @@ final class ReclamationController extends AbstractController
     #[Route('/new', name: 'app_reclamation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+        
         $reclamation = new Reclamation();
         $reclamation->setStatutReclamation('En attente');
 
+        $reclamation->setDateReclamation(new \DateTimeImmutable());
         $form = $this->createForm(ReclamationType::class, $reclamation);
         $form->handleRequest($request);
         
-        // CSRF protection is automatically handled by Symfony forms.
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gérer l'upload de l'image
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
     

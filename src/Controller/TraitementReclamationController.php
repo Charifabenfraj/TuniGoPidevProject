@@ -23,6 +23,8 @@ final class TraitementReclamationController extends AbstractController
     {
         return $this->render('traitement_reclamation/index.html.twig', [
             'traitement_reclamations' => $traitementReclamationRepository->findAll(),
+           // 'traitements' => $traitementReclamationRepository->findAll(), // Changé de 'traitement_reclamations' à 'traitements'
+
         ]);
     }
     /*
@@ -79,38 +81,45 @@ final class TraitementReclamationController extends AbstractController
         $idReclamation = $request->query->get('idReclamation');
     
         if (!$idReclamation) {
+            $this->addFlash('error', 'ID de réclamation manquant.');
             return $this->redirectToRoute('app_reclamation_index');
         }
-    
+        if (!$traitement->getDateTraitement()) {
+            $traitement->setDateTraitement(new \DateTime());
+        }
         $reclamation = $entityManager->getRepository(Reclamation::class)->find($idReclamation);
     
         if (!$reclamation) {
-            throw $this->createNotFoundException('Réclamation non trouvée');
+            $this->addFlash('error', 'Réclamation introuvable pour l’ID fourni.');
+            return $this->redirectToRoute('app_reclamation_index');
         }
     
         $traitement->setReclamation($reclamation);
     
-        // Create the form and handle request
         $form = $this->createForm(TraitementReclamationType::class, $traitement);
         $form->handleRequest($request);
     
-        if ($form->isSubmitted() && $form->isValid()) {
-            $traitement->setDateTraitement(new \DateTime());
-            //$traitement->getReclamation()->setStatutReclamation('Résolue');
-            $traitement->getReclamation()->setStatutReclamation($traitement->getStatutTraitement());
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $traitement->setDateTraitement(new \DateTime());
+                //$traitement->getReclamation()->setStatutReclamation($traitement->getStatutTraitement());
+                $traitement->getReclamation()->setStatutReclamation('Résolue');
 
-            $entityManager->persist($traitement);
-            $entityManager->flush();
+                $entityManager->persist($traitement);
+                $entityManager->flush();
     
-            return $this->redirectToRoute('app_reclamation_index');
+                $this->addFlash('success', 'Traitement enregistré avec succès.');
+                return $this->redirectToRoute('app_reclamation_index');
+            } else {
+                $this->addFlash('error', 'Erreur dans le formulaire. Veuillez corriger les champs.');
+            }
         }
     
         return $this->render('traitement_reclamation/new.html.twig', [
             'form' => $form->createView(),
             'reclamation' => $reclamation,
         ]);
-    }
-    
+    } 
 
     
     #[Route('/{id}/edit', name: 'app_traitement_reclamation_edit', methods: ['GET', 'POST'])]
@@ -130,7 +139,22 @@ final class TraitementReclamationController extends AbstractController
             'form' => $form,
         ]);
     }
-/*
+    /*
+    #[Route('/{id}', name: 'app_traitement_reclamation_show', methods: ['GET'])]
+    public function show(TraitementReclamation $traitementReclamation): Response
+    {
+        return $this->render('traitement_reclamation/show.html.twig', [
+            'traitement' => $traitementReclamation,
+        ]);
+    }*/
+  
+    #[Route('/{id}/modal', name: 'app_traitement_reclamation_modal', methods: ['GET'])]
+    public function modal(TraitementReclamation $traitement): Response
+    {
+        return $this->render('traitement_reclamation/_modal_content.html.twig', [
+            'traitement' => $traitement
+        ]);
+    }
     #[Route('/{id}', name: 'app_traitement_reclamation_delete', methods: ['POST'])]
     public function delete(Request $request, TraitementReclamation $traitementReclamation, EntityManagerInterface $entityManager): Response
     {
@@ -140,5 +164,5 @@ final class TraitementReclamationController extends AbstractController
         }
 
         return $this->redirectToRoute('app_traitement_reclamation_index', [], Response::HTTP_SEE_OTHER);
-    }*/
+    }
 }

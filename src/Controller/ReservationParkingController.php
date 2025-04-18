@@ -24,20 +24,27 @@ final class ReservationParkingController extends AbstractController
     #[Route(name: 'app_reservation_parking_index', methods: ['GET'])]
     public function index(
         ReservationParkingRepository $reservationParkingRepository,
-        PaginatorInterface $paginator,
         Request $request
     ): Response {
-        $data = $reservationParkingRepository->findAll(); // tableau d'entités
-
-        $reservationParkings = $paginator->paginate(
-            $data,
-            $request->query->getInt('page', 1),
-            11 // ✅ Limite par page
-        );
-
+        $page = $request->query->getInt('page', 1);
+        $limit = 11; // Nombre d'éléments par page
+        
+        // Récupération de toutes les réservations
+        $allReservations = $reservationParkingRepository->findAll();
+        $total = count($allReservations);
+        
+        // Calcul de l'offset et extraction des éléments pour la page courante
+        $offset = ($page - 1) * $limit;
+        $paginatedReservations = array_slice($allReservations, $offset, $limit);
+        
+        // Calcul du nombre total de pages
+        $maxPages = ceil($total / $limit);
+    
         return $this->render('reservation_parking/index.html.twig', [
-            'pagination' => $reservationParkings,
-            'reservation_parkings'=>$data
+            'reservation_parkings' => $paginatedReservations,
+            'current_page' => $page,
+            'max_pages' => $maxPages,
+            'total_items' => $total
         ]);
     }
 
