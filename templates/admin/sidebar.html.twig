@@ -105,7 +105,7 @@
         
         <!-- Gestion Réservations -->
         <li class="sidebar-item">
-            <a href="#" class="sidebar-link {% if app.request.get('_route') == 'app_reservation_index' %}active{% endif %}">
+            <a href="{{path('app_reservation_parking_index')}}" class="sidebar-link {% if app.request.get('_route') == 'app_reservation_index' %}active{% endif %}">
                 <i class="fas fa-calendar-check"></i>
                 <span>Gestion Réservations</span>
             </a>
@@ -121,7 +121,7 @@
         
         <!-- Gestion Parking -->
         <li class="sidebar-item">
-            <a href="#" class="sidebar-link {% if app.request.get('_route') == 'app_parking_index' %}active{% endif %}">
+            <a href="{{path('app_parking_index')}}" class="sidebar-link {% if app.request.get('_route') == 'app_parking_index' %}active{% endif %}">
                 <i class="fas fa-parking"></i>
                 <span>Gestion Parking</span>
             </a>

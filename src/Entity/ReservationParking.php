@@ -2,35 +2,40 @@
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
 use App\Repository\ReservationParkingRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Utilisateur;
+use App\Entity\Parking;
 
 #[ORM\Entity(repositoryClass: ReservationParkingRepository::class)]
-#[ORM\Table(name: 'reservation_parking')]
+#[ORM\Table(name: "reservation_parking")]
 class ReservationParking
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', name: "idReservation")]
     private ?int $idReservation = null;
+
+    #[ORM\Column(type: 'datetime', name: "dateReservation")]
+    #[Assert\NotBlank(message: "La date de réservation est requise.")]
+    #[Assert\Type(\DateTimeInterface::class)]
+    private ?\DateTimeInterface $dateReservation = null;
+
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
+    #[ORM\JoinColumn(name: "idUtilisateur", referencedColumnName: "idUtilisateur", nullable: false)]
+    #[Assert\NotNull(message: "L'utilisateur est requis.")]
+    private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne(targetEntity: Parking::class)]
+    #[ORM\JoinColumn(name: "idParking", referencedColumnName: "idParking", nullable: false)]
+    #[Assert\NotNull(message: "Le parking est requis.")]
+    private ?Parking $parking = null;
 
     public function getIdReservation(): ?int
     {
         return $this->idReservation;
     }
-
-    public function setIdReservation(int $idReservation): self
-    {
-        $this->idReservation = $idReservation;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'datetime', nullable: false)]
-    private ?\DateTimeInterface $dateReservation = null;
 
     public function getDateReservation(): ?\DateTimeInterface
     {
@@ -43,102 +48,25 @@ class ReservationParking
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $idUtilisateur = null;
-
-    public function getIdUtilisateur(): ?int
+    public function getUtilisateur(): ?Utilisateur
     {
-        return $this->idUtilisateur;
+        return $this->utilisateur;
     }
 
-    public function setIdUtilisateur(int $idUtilisateur): self
+    public function setUtilisateur(?Utilisateur $utilisateur): self
     {
-        $this->idUtilisateur = $idUtilisateur;
+        $this->utilisateur = $utilisateur;
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $idTrajetTrain = null;
-
-    public function getIdTrajetTrain(): ?int
+    public function getParking(): ?Parking
     {
-        return $this->idTrajetTrain;
+        return $this->parking;
     }
 
-    public function setIdTrajetTrain(?int $idTrajetTrain): self
+    public function setParking(?Parking $parking): self
     {
-        $this->idTrajetTrain = $idTrajetTrain;
+        $this->parking = $parking;
         return $this;
     }
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $idTrajetMetro = null;
-
-    public function getIdTrajetMetro(): ?int
-    {
-        return $this->idTrajetMetro;
-    }
-
-    public function setIdTrajetMetro(?int $idTrajetMetro): self
-    {
-        $this->idTrajetMetro = $idTrajetMetro;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $idTrajetBus = null;
-
-    public function getIdTrajetBus(): ?int
-    {
-        return $this->idTrajetBus;
-    }
-
-    public function setIdTrajetBus(?int $idTrajetBus): self
-    {
-        $this->idTrajetBus = $idTrajetBus;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $idScooter = null;
-
-    public function getIdScooter(): ?int
-    {
-        return $this->idScooter;
-    }
-
-    public function setIdScooter(?int $idScooter): self
-    {
-        $this->idScooter = $idScooter;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $idTaxi = null;
-
-    public function getIdTaxi(): ?int
-    {
-        return $this->idTaxi;
-    }
-
-    public function setIdTaxi(?int $idTaxi): self
-    {
-        $this->idTaxi = $idTaxi;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $idParking = null;
-
-    public function getIdParking(): ?int
-    {
-        return $this->idParking;
-    }
-
-    public function setIdParking(?int $idParking): self
-    {
-        $this->idParking = $idParking;
-        return $this;
-    }
-
 }

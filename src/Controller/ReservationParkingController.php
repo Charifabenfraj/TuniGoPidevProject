@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Parking;
 use App\Entity\ReservationParking;
 use App\Form\ReservationParkingType;
 use App\Repository\ReservationParkingRepository;
@@ -10,15 +10,34 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Security\Core\Security;
 
 #[Route('/reservation/parking')]
 final class ReservationParkingController extends AbstractController
 {
+    
+    
     #[Route(name: 'app_reservation_parking_index', methods: ['GET'])]
-    public function index(ReservationParkingRepository $reservationParkingRepository): Response
-    {
+    public function index(
+        ReservationParkingRepository $reservationParkingRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    ): Response {
+        $data = $reservationParkingRepository->findAll(); // tableau d'entités
+
+        $reservationParkings = $paginator->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            11 // ✅ Limite par page
+        );
+
         return $this->render('reservation_parking/index.html.twig', [
-            'reservation_parkings' => $reservationParkingRepository->findAll(),
+            'pagination' => $reservationParkings,
+            'reservation_parkings'=>$data
         ]);
     }
 
@@ -49,6 +68,7 @@ final class ReservationParkingController extends AbstractController
             'reservation_parking' => $reservationParking,
         ]);
     }
+    
 
     #[Route('/{idReservation}/edit', name: 'app_reservation_parking_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ReservationParking $reservationParking, EntityManagerInterface $entityManager): Response
@@ -78,4 +98,16 @@ final class ReservationParkingController extends AbstractController
 
         return $this->redirectToRoute('app_reservation_parking_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/{idReservation}/front', name: 'app_reservation_parking_delete_front', methods: ['POST'])]
+    public function deleteFront(Request $request, ReservationParking $reservationParking, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$reservationParking->getIdReservation(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($reservationParking);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_reservation_parking_book', [], Response::HTTP_SEE_OTHER);
+    }
+   
+
 }

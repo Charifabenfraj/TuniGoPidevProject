@@ -185,4 +185,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Nothing to erase since we're using plain text passwords
     }
+    public function getId(): ?int
+{
+    return $this->idUtilisateur;
+}
 }
